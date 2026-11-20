@@ -405,7 +405,7 @@
     width: var(--story-art-size);
     max-width: 100%;
     transform-origin: center top;
-    animation: story-art-enter 1s cubic-bezier(.33, 0, .67, .55) both paused;
+    transform: translateX(-35%) scale(.49);
   }
   .clay-home [data-story-expansion] .story-art img {
     transform-origin: calc(50% - var(--story-spine-offset)) 72%;
@@ -415,22 +415,25 @@
     text-align: center;
     transform-origin: center top;
     --story-heading-lift: calc(var(--story-art-size) * 454 / 680 + var(--story-heading-gap) - 14px);
-    animation: story-heading-enter 1s cubic-bezier(.25, .6, .45, 1) both paused;
+    transform: translate(20%, calc(-1 * var(--story-heading-lift))) scale(.76);
   }
   .clay-home [data-story-expansion] .story-title-break { display: inline; }
-  @keyframes story-art-enter {
-    from { transform: translateX(-35%) scale(.49); }
-    to { transform: translateX(var(--story-spine-offset)) scale(1); }
+  .clay-home [data-story-transition] .story-art {
+    transition: transform 480ms var(--ease-out);
   }
-  @keyframes story-heading-enter {
-    from { transform: translate(20%, calc(-1 * var(--story-heading-lift))) scale(.76); }
-    to { transform: translate(0, 0) scale(1); }
+  .clay-home [data-story-transition] .story-title {
+    transition: transform 380ms var(--ease-out) 60ms;
   }
-  .clay-home [data-story-scroll-timeline] :is(.story-art, .story-title) {
-    animation-duration: auto;
-    animation-play-state: running;
-    animation-timeline: scroll(root block);
-    animation-range: var(--story-scroll-start) var(--story-scroll-end);
+  .clay-home [data-story-revealed] .story-art {
+    transform: translateX(var(--story-spine-offset)) scale(1);
+    transition-delay: 60ms;
+  }
+  .clay-home [data-story-revealed] .story-title {
+    transform: translate(0, 0) scale(1);
+    transition-delay: 0ms;
+  }
+  .clay-home [data-story-expansion]:not([data-story-settled]) .story-art img {
+    animation-play-state: paused;
   }
 }
 @media (prefers-reduced-motion: reduce) { :is(.clay-home, .clay-santa) .clay-button:not(:disabled):hover { transform: none; } }

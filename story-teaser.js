@@ -1,9 +1,6 @@
 const storiesSection = document.getElementById('stories');
 const storyArtwork = storiesSection.querySelector('.story-art');
-const storyHeading = storiesSection.querySelector('.story-title');
 const expandedTeaser = matchMedia('(max-width: 740px) and (prefers-reduced-motion: no-preference)');
-const nativeStoryScroll = CSS.supports('animation-timeline: scroll(root block)') &&
-  CSS.supports('animation-range: 10px 20px');
 
 let artworkVisible = false;
 function updateStoryFlight() {
@@ -17,29 +14,19 @@ const storyVisibility = new IntersectionObserver(([entry]) => {
 storyVisibility.observe(storyArtwork);
 document.addEventListener('visibilitychange', updateStoryFlight);
 
-let teaserFrame = 0;
-let teaserAnimations = [];
 let viewportWidth;
 let viewportHeight;
-let scrollStart;
-let scrollDistance;
-let lastProgress;
-function positionStoryTeaser() {
-  teaserFrame = 0;
-  if (!teaserAnimations.length) {
-    const artwork = storyArtwork.getAnimations().find(animation => animation.animationName === 'story-art-enter');
-    const heading = storyHeading.getAnimations().find(animation => animation.animationName === 'story-heading-enter');
-    if (!artwork || !heading) return;
-    teaserAnimations = [artwork, heading]
-      .map(animation => ({ animation, duration: animation.effect.getTiming().duration }));
-  }
-  const progress = Math.min(1, Math.max(0, (window.scrollY - scrollStart) / scrollDistance));
-  if (progress === lastProgress) return;
-  lastProgress = progress;
+let revealAt;
+let storyRevealed = false;
 
-  for (const { animation, duration } of teaserAnimations) {
-    animation.currentTime = progress * duration;
-  }
+function updateStoryReveal() {
+  // Reset near the top so a small change in scroll direction can't restart the reveal.
+  const revealed = window.scrollY >= (storyRevealed ? 24 : revealAt);
+  if (revealed === storyRevealed) return;
+  storyRevealed = revealed;
+  storiesSection.setAttribute('data-story-transition', '');
+  storiesSection.removeAttribute('data-story-settled');
+  storiesSection.toggleAttribute('data-story-revealed', revealed);
 }
 
 function measureStoryTeaser() {
@@ -49,47 +36,35 @@ function measureStoryTeaser() {
     viewportHeight = window.innerHeight;
   }
   const sectionTop = storiesSection.getBoundingClientRect().top + window.scrollY;
-  const start = Math.max(0, sectionTop - viewportHeight);
-  const distance = Math.max(1, Math.min(300, viewportHeight * .43));
-  if (start === scrollStart && distance === scrollDistance) return;
-  scrollStart = start;
-  scrollDistance = distance;
-
-  if (nativeStoryScroll) {
-    storiesSection.style.setProperty('--story-scroll-start', `${scrollStart}px`);
-    storiesSection.style.setProperty('--story-scroll-end', `${scrollStart + scrollDistance}px`);
-  } else {
-    queueTeaserPosition();
-  }
-}
-
-function queueTeaserPosition() {
-  if (!teaserFrame) teaserFrame = requestAnimationFrame(positionStoryTeaser);
+  revealAt = Math.max(72, sectionTop - viewportHeight + 108);
 }
 
 const teaserLayout = new ResizeObserver(measureStoryTeaser);
+storyArtwork.addEventListener('transitionend', event => {
+  if (event.target === storyArtwork && event.propertyName === 'transform' && storyRevealed) {
+    storiesSection.setAttribute('data-story-settled', '');
+  }
+});
+
 function syncStoryTeaser() {
   storiesSection.toggleAttribute('data-story-expansion', expandedTeaser.matches);
-  storiesSection.toggleAttribute('data-story-scroll-timeline', expandedTeaser.matches && nativeStoryScroll);
+  storiesSection.removeAttribute('data-story-transition');
+  storyRevealed = false;
   if (expandedTeaser.matches) {
     viewportWidth = undefined;
-    scrollStart = undefined;
-    lastProgress = undefined;
-    if (!nativeStoryScroll) {
-      window.addEventListener('scroll', queueTeaserPosition, { passive: true });
-    }
     measureStoryTeaser();
+    storyRevealed = window.scrollY >= revealAt;
     teaserLayout.observe(document.querySelector('.home-header-band'));
     teaserLayout.observe(document.querySelector('.ht-hero'));
+    window.addEventListener('scroll', updateStoryReveal, { passive: true });
     window.addEventListener('resize', measureStoryTeaser);
   } else {
     teaserLayout.disconnect();
-    teaserAnimations = [];
-    window.removeEventListener('scroll', queueTeaserPosition);
+    window.removeEventListener('scroll', updateStoryReveal);
     window.removeEventListener('resize', measureStoryTeaser);
-    cancelAnimationFrame(teaserFrame);
-    teaserFrame = 0;
   }
+  storiesSection.toggleAttribute('data-story-revealed', storyRevealed);
+  storiesSection.toggleAttribute('data-story-settled', storyRevealed);
 }
 
 expandedTeaser.addEventListener('change', syncStoryTeaser);
