@@ -1,6 +1,7 @@
 const storiesSection = document.getElementById('stories');
 const storyArtwork = storiesSection.querySelector('.story-art');
-const expandedTeaser = matchMedia('(max-width: 740px) and (prefers-reduced-motion: no-preference)');
+const mobileStories = matchMedia('(max-width: 740px)');
+const expandedTeaser = matchMedia('(min-width: 360px) and (max-width: 740px) and (prefers-reduced-motion: no-preference)');
 
 let artworkVisible = false;
 function updateStoryFlight() {
@@ -81,7 +82,7 @@ function scrollToStories(event) {
   storyScroll?.abort();
   const hash = event.currentTarget.hash;
   if (location.hash !== hash) history.pushState(null, '', hash);
-  if (expandedTeaser.matches) {
+  if (mobileStories.matches) {
     storiesSection.focus({ preventScroll: true });
     storiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return;
