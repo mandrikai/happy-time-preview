@@ -124,16 +124,17 @@
 @keyframes hero-snowfall {
   to { transform: translateY(var(--snow-tile-height)); }
 }
-.hero-clear-text:not(.clay-lettering),
-.hero-clear-text > span,
-.hero-title-connector {
+.hero-clear-text:not(.clay-lettering) {
   background: var(--hero-sky);
   border-radius: 7px;
   box-shadow: 0 0 9px 5px var(--hero-sky);
-}
-.hero-clear-text:not(.clay-lettering) {
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
+}
+/* Cast the blue halo behind the whole title so it can't cover the line above. */
+.clay-home .hero-copy h1,
+.santa-snow-background .santa-heading .santa-title {
+  filter: drop-shadow(0 0 5px var(--hero-sky));
 }
 .clay-home .ht-hero-inner {
   position: relative;
