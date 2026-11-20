@@ -1,6 +1,9 @@
 const storiesSection = document.getElementById('stories');
 const storyArtwork = storiesSection.querySelector('.story-art');
+const storyHeading = storiesSection.querySelector('.story-title');
 const expandedTeaser = matchMedia('(max-width: 740px) and (prefers-reduced-motion: no-preference)');
+const nativeStoryScroll = CSS.supports('animation-timeline: scroll(root block)') &&
+  CSS.supports('animation-range: 10px 20px');
 
 let artworkVisible = false;
 function updateStoryFlight() {
@@ -15,37 +18,75 @@ storyVisibility.observe(storyArtwork);
 document.addEventListener('visibilitychange', updateStoryFlight);
 
 let teaserFrame = 0;
+let teaserAnimations = [];
+let viewportWidth;
+let viewportHeight;
+let scrollStart;
+let scrollDistance;
 let lastProgress;
 function positionStoryTeaser() {
   teaserFrame = 0;
-  const sectionTop = storiesSection.getBoundingClientRect().top;
-  const viewportHeight = window.innerHeight;
-  const start = Math.min(sectionTop + window.scrollY, viewportHeight);
-  const distance = Math.min(300, viewportHeight * .43);
-  const progress = Math.min(1, Math.max(0, (start - sectionTop) / distance));
+  if (!teaserAnimations.length) {
+    const artwork = storyArtwork.getAnimations().find(animation => animation.animationName === 'story-art-enter');
+    const heading = storyHeading.getAnimations().find(animation => animation.animationName === 'story-heading-enter');
+    if (!artwork || !heading) return;
+    teaserAnimations = [artwork, heading]
+      .map(animation => ({ animation, duration: animation.effect.getTiming().duration }));
+  }
+  const progress = Math.min(1, Math.max(0, (window.scrollY - scrollStart) / scrollDistance));
   if (progress === lastProgress) return;
   lastProgress = progress;
 
-  // The heading clears the book's path before the book grows into the centre.
-  storiesSection.style.setProperty('--story-title-up', (1 - progress) ** 2.4);
-  storiesSection.style.setProperty('--story-title-right', (1 - progress) ** 1.5);
-  storiesSection.style.setProperty('--story-art-offset', 1 - progress ** 1.45);
+  for (const { animation, duration } of teaserAnimations) {
+    animation.currentTime = progress * duration;
+  }
+}
+
+function measureStoryTeaser() {
+  // Collapsing mobile browser controls must not move the animation's scroll range.
+  if (viewportWidth !== window.innerWidth) {
+    viewportWidth = window.innerWidth;
+    viewportHeight = window.innerHeight;
+  }
+  const sectionTop = storiesSection.getBoundingClientRect().top + window.scrollY;
+  const start = Math.max(0, sectionTop - viewportHeight);
+  const distance = Math.max(1, Math.min(300, viewportHeight * .43));
+  if (start === scrollStart && distance === scrollDistance) return;
+  scrollStart = start;
+  scrollDistance = distance;
+
+  if (nativeStoryScroll) {
+    storiesSection.style.setProperty('--story-scroll-start', `${scrollStart}px`);
+    storiesSection.style.setProperty('--story-scroll-end', `${scrollStart + scrollDistance}px`);
+  } else {
+    queueTeaserPosition();
+  }
 }
 
 function queueTeaserPosition() {
   if (!teaserFrame) teaserFrame = requestAnimationFrame(positionStoryTeaser);
 }
 
+const teaserLayout = new ResizeObserver(measureStoryTeaser);
 function syncStoryTeaser() {
   storiesSection.toggleAttribute('data-story-expansion', expandedTeaser.matches);
+  storiesSection.toggleAttribute('data-story-scroll-timeline', expandedTeaser.matches && nativeStoryScroll);
   if (expandedTeaser.matches) {
+    viewportWidth = undefined;
+    scrollStart = undefined;
     lastProgress = undefined;
-    positionStoryTeaser();
-    window.addEventListener('scroll', queueTeaserPosition, { passive: true });
-    window.addEventListener('resize', queueTeaserPosition);
+    if (!nativeStoryScroll) {
+      window.addEventListener('scroll', queueTeaserPosition, { passive: true });
+    }
+    measureStoryTeaser();
+    teaserLayout.observe(document.querySelector('.home-header-band'));
+    teaserLayout.observe(document.querySelector('.ht-hero'));
+    window.addEventListener('resize', measureStoryTeaser);
   } else {
+    teaserLayout.disconnect();
+    teaserAnimations = [];
     window.removeEventListener('scroll', queueTeaserPosition);
-    window.removeEventListener('resize', queueTeaserPosition);
+    window.removeEventListener('resize', measureStoryTeaser);
     cancelAnimationFrame(teaserFrame);
     teaserFrame = 0;
   }
