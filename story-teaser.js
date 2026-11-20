@@ -79,6 +79,14 @@ function scrollToStories(event) {
 
   event.preventDefault();
   storyScroll?.abort();
+  const hash = event.currentTarget.hash;
+  if (location.hash !== hash) history.pushState(null, '', hash);
+  if (expandedTeaser.matches) {
+    storiesSection.focus({ preventScroll: true });
+    storiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
   const controller = new AbortController();
   storyScroll = controller;
   const { signal } = controller;
@@ -88,8 +96,6 @@ function scrollToStories(event) {
   }
   reduceStoryMotion.addEventListener('change', cancel, { signal });
 
-  const hash = event.currentTarget.hash;
-  if (location.hash !== hash) history.pushState(null, '', hash);
   const start = window.scrollY;
   const distance = storiesSection.getBoundingClientRect().top;
   const duration = Math.abs(distance) < 1 ? 0 : 1450;

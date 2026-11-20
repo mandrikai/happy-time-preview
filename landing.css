@@ -419,14 +419,14 @@
   }
   .clay-home [data-story-expansion] .story-title-break { display: inline; }
   .clay-home [data-story-transition] .story-art {
-    transition: transform 480ms var(--ease-out);
+    transition: transform 920ms ease-in-out;
   }
   .clay-home [data-story-transition] .story-title {
-    transition: transform 380ms var(--ease-out) 60ms;
+    transition: transform 820ms ease-in-out 120ms;
   }
   .clay-home [data-story-revealed] .story-art {
     transform: translateX(var(--story-spine-offset)) scale(1);
-    transition-delay: 60ms;
+    transition-delay: 120ms;
   }
   .clay-home [data-story-revealed] .story-title {
     transform: translate(0, 0) scale(1);
