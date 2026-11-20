@@ -97,11 +97,6 @@ html.santa-snow-background {
   font-size: .81rem;
   font-weight: 900;
 }
-.santa-pair .preview-illustration {
-  padding: 8%;
-  background: var(--clay-paper);
-  object-fit: contain;
-}
 .santa-arrow { margin-bottom: 22px; color: #69486a; }
 .clay-santa .santa-choice {
   align-self: center;
