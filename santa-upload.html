@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru" class="santa-background">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff8ee">
+  <title>Загрузить фото ребёнка · Happy Time</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="landing.css?v=clay-santa">
+  <link rel="stylesheet" href="santa.css?v=santa-names">
+  <script src="santa-preview.js" type="module"></script>
+</head>
+<body class="ht-page clay-santa">
+  <header class="site-header ht-shell">
+    <a href="./" class="site-brand"><span class="clay-wordmark clay-lettering"><span>Happy</span> <span>Time</span></span></a>
+    <a class="santa-nav" href="santa.html"><svg class="ht-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 12H5m6-6-6 6 6 6"/></svg>К выбору фото</a>
+  </header>
+  <main class="santa-panel ht-shell santa-upload-layout">
+    <div class="santa-heading">
+      <h1 class="santa-title clay-lettering"><span><b>З</b>агрузите</span> <span>фото</span> <span>реб<b>ё</b>нка</span></h1>
+      <p id="santa-instructions"></p>
+      <img class="santa-upload-art" src="art/clay-ded-moroz.webp" width="1024" height="820" alt="">
+    </div>
+    <div class="santa-upload-panel">
+      <form id="santa-form" hidden>
+        <label class="santa-picker">
+          <input id="santa-file" type="file" disabled accept="image/jpeg,image/png,image/webp" required
+            aria-labelledby="santa-picker-text" aria-describedby="santa-file-hint santa-file-error">
+          <span class="santa-picker-body">
+            <img id="santa-preview" alt="" hidden>
+            <span id="santa-picker-text" class="ht-button clay-button">Загрузить фото</span>
+            <span id="santa-file-hint">JPG, PNG или WebP до 7 МБ</span>
+            <span id="santa-filename" hidden></span>
+          </span>
+        </label>
+        <p id="santa-file-error" role="status"></p>
+        <label class="santa-consent">
+          <input id="santa-consent" type="checkbox" disabled required>
+          <span>Я родитель или законный представитель ребёнка и согласен(на) на обработку фото сервисом ИИшка для создания снимка.</span>
+        </label>
+        <button id="santa-submit" class="ht-button clay-button" type="button" disabled><span class="clay-lettering"><span>С<b>о</b>здать</span> <span><b>ф</b>ото</span></span></button>
+      </form>
+      <p id="santa-status" role="status" aria-live="polite">Это версия для просмотра. Загрузка и создание фото здесь недоступны.</p>
+      <section id="santa-result" aria-labelledby="santa-result-title" hidden>
+        <h2 id="santa-result-title" tabindex="-1">Фото готово</h2>
+        <img id="santa-photo" alt="Готовое фото с Дедом Морозом">
+        <a id="santa-download" class="ht-button clay-button" download>Скачать фото</a>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
