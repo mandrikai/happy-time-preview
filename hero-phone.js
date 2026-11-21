@@ -14,26 +14,25 @@
   const head = $('.hp-head');
 
   const OUT = 'cubic-bezier(.23, 1, .32, 1)';
-  const SETTLE = 'cubic-bezier(.34, 1.36, .64, 1)';
+  const SETTLE = 'cubic-bezier(.24, 1.12, .44, 1)';
 
   const vibrate = (delay = 0) => buzz.animate(
     [
       { transform: 'rotate(0)' },
-      { transform: 'rotate(-2.2deg)' },
-      { transform: 'rotate(2deg)' },
-      { transform: 'rotate(-1.6deg)' },
-      { transform: 'rotate(1.4deg)' },
-      { transform: 'rotate(-.6deg)' },
+      { transform: 'rotate(-1.4deg)', easing: 'ease-in-out' },
+      { transform: 'rotate(1.3deg)', easing: 'ease-in-out' },
+      { transform: 'rotate(-.8deg)', easing: 'ease-in-out' },
+      { transform: 'rotate(.4deg)', easing: 'ease-out' },
       { transform: 'rotate(0)' },
     ],
-    { duration: 520, delay, easing: 'linear' }
+    { duration: 560, delay, easing: 'ease-out' }
   );
 
   const play = () => {
     // 1. The phone lands: already almost there, settles with a small bounce.
     body.animate(
       [
-        { opacity: 0, transform: 'translateY(26px) rotate(-6deg) scale(.95)' },
+        { opacity: 0, transform: 'translateY(18px) rotate(-3deg) scale(.98)' },
         { opacity: 1, transform: 'none' },
       ],
       { duration: 950, easing: SETTLE, fill: 'backwards' }
@@ -57,15 +56,15 @@
     );
     vibrate(1550);
 
-    // 4. The chat: the photo "loads" from blur, then the message lands.
+    // 4. Reveal the photo inside its slot, then bring in the message.
     head.animate(
       [{ opacity: 0 }, { opacity: 1 }],
       { duration: 450, delay: 3050, easing: 'ease', fill: 'backwards' }
     );
     photo.animate(
       [
-        { opacity: 0, filter: 'blur(14px)', transform: 'scale(1.06)' },
-        { opacity: 1, filter: 'blur(0)', transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(1.025)' },
+        { opacity: 1, transform: 'scale(1)' },
       ],
       { duration: 1300, delay: 3150, easing: OUT, fill: 'backwards' }
     );

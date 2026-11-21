@@ -16,6 +16,9 @@
   const photos = document.querySelector('.pick-photos');
   const before = photos.querySelector('.pick-before');
   const after = photos.querySelector('.pick-after');
+  const reveal = photos.querySelector('.pick-reveal');
+  const handle = photos.querySelector('.pick-handle');
+  const knob = photos.querySelector('.pick-knob-position');
   const range = photos.querySelector('.pick-range');
   const note = document.querySelector('.pick-note');
   const cta = document.querySelector('.pick-cta');
@@ -23,35 +26,55 @@
   let mode = 'sleeping';
   const REST = 30; // leave most of the frame to the result, where Santa is
   const MIN = 0, MAX = 100;
+  const parts = [
+    [reveal, value => `translateX(${value}%)`],
+    [after, value => `translateX(${-value}%)`],
+    [handle, value => `translateX(${value}%)`],
+    [knob, value => `translateX(clamp(26px, ${value}%, calc(100% - 26px)))`],
+  ];
+  let introAllowed = !reduce;
+  let intro = [];
 
   Object.values(MODES).forEach(m => [m.before[0], m.after[0]].forEach(src => { new Image().src = src; }));
 
+  const clamp = value => Math.max(MIN, Math.min(MAX, value));
   const setPos = value => {
-    const n = Number(value);
-    const v = Math.max(MIN, Math.min(MAX, Number.isFinite(n) ? n : REST));
-    photos.style.setProperty('--pos', v + '%');
-    photos.dataset.edge = v < 22 ? 'left' : v > 78 ? 'right' : '';
+    for (const [part, transform] of parts) part.style.transform = transform(value);
+  };
+  const stopIntro = () => {
+    introAllowed = false;
+    for (const animation of intro) animation.cancel();
+    intro = [];
   };
 
   // Browsers restore form values on reload; always start from our own position.
-  addEventListener('pageshow', () => { range.value = REST; });
+  addEventListener('pageshow', () => {
+    range.value = REST;
+    setPos(REST);
+  });
 
   // Keyboard / screen readers use the (visually hidden) range input.
   range.addEventListener('input', () => {
-    photos.classList.remove('is-intro');
-    setPos(range.value);
+    stopIntro();
+    setPos(range.valueAsNumber);
   });
 
   // Pointer: only a deliberate horizontal drag moves the handle.
   // A tap or a vertical swipe does nothing, so scrolling never jumps the slider.
   let drag = null;
-  const posFromX = x => {
-    const r = range.getBoundingClientRect();
-    return ((x - r.left) / r.width) * 100;
+  let frame = 0;
+  const paintDrag = () => {
+    frame = 0;
+    const value = clamp((drag.nextX - drag.left) / drag.width * MAX);
+    setPos(value);
+    range.value = Math.round(value);
   };
   photos.addEventListener('pointerdown', e => {
-    if (e.button !== 0) return;
-    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, on: false, mouse: e.pointerType === 'mouse' };
+    if (e.button !== 0 || drag) return;
+    const { left, width } = range.getBoundingClientRect();
+    if (width === 0) return;
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, left, width, on: false };
+    photos.setPointerCapture(e.pointerId);
   });
   photos.addEventListener('pointermove', e => {
     if (!drag || e.pointerId !== drag.id) return;
@@ -62,22 +85,27 @@
         return;
       }
       drag.on = true;
-      photos.setPointerCapture(e.pointerId);
-      photos.classList.remove('is-intro');
+      stopIntro();
       photos.classList.add('is-dragging');
     }
     e.preventDefault();
-    const v = posFromX(e.clientX);
-    setPos(v);
-    range.value = Math.round(Math.max(MIN, Math.min(MAX, v)));
+    drag.nextX = e.clientX;
+    if (!frame) frame = requestAnimationFrame(paintDrag);
   });
   const end = e => {
     if (!drag || e.pointerId !== drag.id) return;
+    if (frame) {
+      cancelAnimationFrame(frame);
+      paintDrag();
+    }
     photos.classList.remove('is-dragging');
     drag = null;
   };
   photos.addEventListener('pointerup', end);
   photos.addEventListener('pointercancel', end);
+  photos.addEventListener('lostpointercapture', e => {
+    if (e.target === photos) end(e);
+  });
 
   const apply = next => {
     const m = MODES[next];
@@ -87,6 +115,7 @@
     cta.href = 'santa-upload.html?mode=' + next;
   };
 
+  let swapTimer;
   const choose = next => {
     if (next === mode) return;
     mode = next;
@@ -95,9 +124,14 @@
     if (reduce) { apply(next); return; }
     photos.classList.add('is-swapping');
     note.classList.add('is-swapping');
-    setTimeout(() => {
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(() => {
       apply(next);
-      const done = () => { photos.classList.remove('is-swapping'); note.classList.remove('is-swapping'); };
+      const done = () => {
+        if (mode !== next) return;
+        photos.classList.remove('is-swapping');
+        note.classList.remove('is-swapping');
+      };
       after.decode ? after.decode().then(done, done) : done();
     }, 180);
   };
@@ -115,17 +149,14 @@
   });
 
   // One authored moment: Santa slides into the frame once the result has loaded.
-  if (!reduce) {
-    setPos(96);
-    const start = () => requestAnimationFrame(() => {
-      photos.classList.add('is-intro');
-      setPos(REST);
-      range.value = REST;
-    });
-    const ready = () => setTimeout(start, 350);
+  if (introAllowed && reveal.animate) {
+    const ready = () => {
+      if (!introAllowed) return;
+      intro = parts.map(([part, transform]) => part.animate(
+        [{ transform: transform(96) }, { transform: transform(REST) }],
+        { delay: 300, duration: 1250, easing: 'cubic-bezier(.23, 1, .32, 1)', fill: 'backwards' }
+      ));
+    };
     after.complete ? ready() : after.addEventListener('load', ready, { once: true });
-  } else {
-    setPos(REST);
-    range.value = REST;
   }
 })();

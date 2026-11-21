@@ -1,16 +1,8 @@
-@property --pos {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 50%;
-}
-
 .clay-santa {
   --cherry: #8a1e3c;
   --cherry-soft: #5e2a40;
   --ease-out: cubic-bezier(.23, 1, .32, 1);
-  --stage-w: min(78vw, 320px, calc((100svh - 330px) * .6667));
-  --frame: 18px;              /* clay edge thickness */
-  --inset: calc(var(--frame) - 4px); /* photos tuck slightly under the clay */
+  --stage-w: min(78vw, 320px, max(160px, calc((100svh - 330px) * .6667)));
 }
 .clay-santa ::selection { background: #8a1e3c; color: #fff8ee; }
 
@@ -102,68 +94,85 @@
   width: var(--stage-w);
   aspect-ratio: 2 / 3;
   touch-action: pan-y;
-  filter: drop-shadow(0 14px 18px #2b4a6a2e);
 }
-.pick-photos::after {
-  content: '';
+.pick-frame {
   position: absolute;
   inset: 0;
-  border: var(--frame) solid transparent;
-  border-image: url('art/clay-photo-frame-cream.webp') 84 68 80 66 / var(--frame) stretch;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 12px 14px #2b4a6a26);
   pointer-events: none;
   z-index: 3;
 }
-.pick-photos img {
+.pick-window {
   position: absolute;
-  inset: var(--inset);
-  width: calc(100% - 2 * var(--inset));
-  height: calc(100% - 2 * var(--inset));
-  object-fit: cover;
+  inset: 4.2% 6.3%;
+  overflow: hidden;
   border-radius: 10px;
-  transition: opacity 180ms ease, filter 180ms ease;
+  isolation: isolate;
 }
-.pick-after { clip-path: inset(0 0 0 var(--pos)); }
-.pick-photos.is-intro { transition: --pos 1100ms var(--ease-out); }
-.pick-photos.is-swapping img { opacity: 0; filter: blur(6px); }
+.pick-window img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+/* Move the window and its image in opposite directions to keep the image in place. */
+.pick-reveal {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transform: translateX(30%);
+}
+.pick-after { transform: translateX(-30%); }
+.pick-photos.is-swapping .pick-window img { opacity: 0; }
 
 .pick-tag {
   position: absolute;
-  top: calc(var(--inset) + 10px);
+  top: 10px;
   z-index: 2;
   padding: 3px 10px 4px;
   border-radius: 999px;
   background: #fff8eee6;
   color: var(--cherry);
   font: 800 .8rem / 1.2 var(--clay-display, Nunito, sans-serif);
-  transition: opacity 200ms ease;
+  pointer-events: none;
 }
-.pick-tag-before { left: calc(var(--inset) + 10px); }
-.pick-tag-after { right: calc(var(--inset) + 10px); }
-.pick-photos[data-edge="left"] .pick-tag-before,
-.pick-photos[data-edge="right"] .pick-tag-after { opacity: 0; }
+.pick-tag-before { left: 10px; }
+.pick-tag-after { right: 10px; }
 
 .pick-track {
   position: absolute;
-  inset: var(--inset);
+  inset: 0;
   z-index: 2;
   pointer-events: none;
 }
-.pick-handle {
+.pick-handle, .pick-knob-position {
+  position: absolute;
+  inset: 0;
+}
+.pick-handle { transform: translateX(30%); }
+.pick-handle::before {
+  content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--pos);
+  left: -1.5px;
   width: 3px;
-  margin-left: -1.5px;
   background: #fff8ee;
   box-shadow: 0 0 6px #32152733;
-  pointer-events: none;
 }
 /* The line can reach the very edge; the knob stops just inside the photo. */
+.pick-knob-position { transform: translateX(clamp(26px, 30%, calc(100% - 26px))); }
 .pick-knob {
   position: absolute;
   top: 50%;
-  left: clamp(26px, var(--pos), calc(100% - 26px));
+  left: 0;
   width: 40px;
   height: 40px;
   padding: 9px;
@@ -183,10 +192,10 @@
    it only serves keyboard and screen-reader users. */
 .pick-range {
   position: absolute;
-  inset: var(--inset);
+  inset: 0;
   z-index: 4;
-  width: calc(100% - 2 * var(--inset));
-  height: calc(100% - 2 * var(--inset));
+  width: 100%;
+  height: 100%;
   margin: 0;
   opacity: 0;
   pointer-events: none;
@@ -227,12 +236,11 @@
 }
 
 @media (min-width: 741px) {
-  .clay-santa { --stage-w: min(340px, calc((100svh - 410px) * .6667)); }
+  .clay-santa { --stage-w: min(340px, max(160px, calc((100svh - 410px) * .6667))); }
   .pick { gap: 18px; max-width: 640px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pick-photos.is-intro { transition: none; }
-  .pick-photos.is-swapping img { filter: none; }
+  .pick-window img, .pick-knob { transition-duration: 0ms; }
   .pick-toggle-pill { transition-duration: 0ms; }
 }
