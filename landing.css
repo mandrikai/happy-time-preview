@@ -177,6 +177,7 @@
 .clay-lettering b { transform: rotate(-3.8deg) translateY(-.035em); }
 .clay-lettering > span:nth-of-type(2) b { transform: rotate(3.2deg) translateY(.035em); }
 .clay-lettering > .hero-title-connector { position: relative; transform: none; }
+.hero-title-break { display: none; }
 .clay-home :is(.clay-wordmark, .hero-copy h1, .story-title, .ht-how h2, .ht-faq h2) {
   text-shadow: 0 .025em 0 #200d1a22, 0 .045em .04em #381e3128;
 }
@@ -371,7 +372,14 @@
   }
   .clay-home .hero-copy h1 {
     font-size: clamp(2rem, 10.7vw, 4.6rem);
+    line-height: 1.05;
     text-align: center;
+  }
+  .clay-home .hero-copy .clay-lettering > span { transform: none; }
+  .clay-home .hero-copy .hero-title-break { display: inline; }
+  .clay-home .hero-copy .hero-curve-letter {
+    display: inline-block;
+    transform: translateY(calc(.11em * (1 - var(--curve) * var(--curve)))) rotate(calc(-5deg * var(--curve)));
   }
   .clay-home .hero-actions { column-gap: clamp(12px, 5vw, 24px); row-gap: 6px; }
   :is(.clay-home, .clay-santa) .clay-button {
