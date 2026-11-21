@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="landing.css?v=title-ink">
   <link rel="stylesheet" href="santa.css?v=santa-names">
-  <script src="santa-preview.js" type="module"></script>
+  <script src="santa-preview.js?v=heic-upload" type="module"></script>
 </head>
 <body class="ht-page clay-santa">
   <header class="site-header ht-shell">
@@ -40,8 +40,10 @@
           <input id="santa-consent" type="checkbox" disabled required>
           <span>Я родитель или законный представитель ребёнка и согласен(на) на обработку фото сервисом ИИшка для создания снимка.</span>
         </label>
+        <label id="santa-code-field" hidden>Код доступа <input id="santa-code" type="password" autocomplete="off"></label>
         <button id="santa-submit" class="ht-button clay-button" type="button" disabled><span class="clay-lettering"><span>С<b>о</b>здать</span> <span><b>ф</b>ото</span></span></button>
       </form>
+      <noscript><p>Для загрузки фотографии включите JavaScript в браузере.</p></noscript>
       <p id="santa-status" role="status" aria-live="polite">Это версия для просмотра. Загрузка и создание фото здесь недоступны.</p>
       <section id="santa-result" aria-labelledby="santa-result-title" hidden>
         <h2 id="santa-result-title" tabindex="-1">Фото готово</h2>

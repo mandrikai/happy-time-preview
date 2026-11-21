@@ -7,9 +7,11 @@
   <meta name="theme-color" content="#fff8ee">
   <title>Фото с Дедом Морозом · Happy Time</title>
   <link rel="icon" href="logo.png">
+  <link rel="preload" as="image" href="santa-examples/sleeping-result.jpg">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="landing.css?v=title-ink">
-  <link rel="stylesheet" href="santa.css?v=photo-examples">
+  <link rel="stylesheet" href="santa.css?v=winter-button-shadow">
+  <link rel="stylesheet" href="santa-v2.css?v=6">
 </head>
 <body class="ht-page clay-santa">
   <div class="hero-snowfall" aria-hidden="true"></div>
@@ -19,45 +21,33 @@
       <a class="santa-nav" href="./">Меню</a>
     </header>
   </div>
-  <main class="santa-panel ht-shell">
-    <header class="santa-heading">
-      <h1 class="santa-title"><span class="clay-lettering hero-clear-text"><span><b>Ф</b>ото</span> <b class="hero-title-connector">с</b> <span><b>Д</b>едом</span> <span>Мор<b>о</b>зом</span></span></h1>
-      <p><span class="hero-clear-text">Какое фото хотите загрузить?</span></p>
-    </header>
-    <div class="santa-options">
-      <article class="santa-option">
-        <h2>Фото спящего ребёнка</h2>
-        <p>Добавим Деда Мороза прямо на исходный снимок. Так лучше всего сохраняются внешность ребёнка, его поза во сне и обстановка.</p>
-        <div class="santa-pair">
-          <figure>
-            <img src="santa-examples/sleeping-original.jpg" width="637" height="850" alt="Спящая девочка до обработки">
-            <figcaption>Исходное фото</figcaption>
-          </figure>
-          <svg class="santa-arrow ht-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
-          <figure>
-            <img src="santa-examples/sleeping-result.jpg" width="564" height="850" alt="Дед Мороз рядом со спящей девочкой">
-            <figcaption>Результат</figcaption>
-          </figure>
-        </div>
-        <a class="ht-button clay-button santa-choice" href="santa-upload.html?mode=sleeping" aria-label="Загрузить фото спящего ребёнка">Загрузить фото</a>
-      </article>
-      <article class="santa-option santa-option-ordinary">
-        <h2>Обычное фото ребёнка</h2>
-        <p>Создадим новый снимок с Дедом Морозом, на котором ребёнок спит в естественной позе. При перерисовке черты лица могут заметно отличаться от оригинала.</p>
-        <div class="santa-pair">
-          <figure>
-            <img src="santa-examples/ordinary-original.jpg" width="566" height="850" alt="Фотография мальчика с джойстиком" loading="lazy">
-            <figcaption>Исходное фото</figcaption>
-          </figure>
-          <svg class="santa-arrow ht-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
-          <figure>
-            <img src="santa-examples/ordinary-result.jpg" width="564" height="850" alt="Дед Мороз рядом со спящим мальчиком" loading="lazy">
-            <figcaption>Результат</figcaption>
-          </figure>
-        </div>
-        <a class="ht-button clay-button santa-choice" href="santa-upload.html?mode=ordinary" aria-label="Загрузить фото ребёнка (обычный снимок)">Загрузить фото</a>
-      </article>
+
+  <main class="pick ht-shell">
+    <h1 class="pick-title clay-lettering"><span><b>К</b>акое</span> <span>у</span> <span><b>в</b>ас</span> <span>ф<b>о</b>то?</span></h1>
+
+    <div class="pick-toggle" role="radiogroup" aria-label="Какое фото у вас есть">
+      <span class="pick-toggle-pill" aria-hidden="true"></span>
+      <button type="button" role="radio" aria-checked="true" data-mode="sleeping">Ребёнок спит<span class="pick-badge">Рекомендуем</span></button>
+      <button type="button" role="radio" aria-checked="false" data-mode="ordinary">Обычное фото</button>
     </div>
+
+    <figure class="pick-stage">
+      <div class="pick-photos" style="--pos: 30%">
+        <img class="pick-before" src="santa-examples/sleeping-original.jpg" width="637" height="850" alt="Спящая девочка до обработки">
+        <img class="pick-after" src="santa-examples/sleeping-result.jpg" width="564" height="850" alt="Дед Мороз рядом со спящей девочкой">
+        <span class="pick-tag pick-tag-before" aria-hidden="true">до</span>
+        <span class="pick-tag pick-tag-after" aria-hidden="true">после</span>
+        <span class="pick-track" aria-hidden="true"><span class="pick-handle"></span>
+          <svg class="pick-knob" viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M15 6l6 6-6 6"/></svg>
+        </span>
+        <input class="pick-range" type="range" min="0" max="100" value="30" autocomplete="off" aria-label="Сравнить фото до и после">
+      </div>
+      <figcaption class="pick-note" aria-live="polite">Сфотографируйте спящего ребёнка, так внешность сохранится на 100%</figcaption>
+    </figure>
+
+    <a class="ht-button clay-button pick-cta" href="santa-upload.html?mode=sleeping">Загрузить фото</a>
   </main>
+
+  <script src="santa-v2.js?v=5" defer></script>
 </body>
 </html>

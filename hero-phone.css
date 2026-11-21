@@ -1,0 +1,137 @@
+/* Mobile hero: clay phone that receives a night message from Ded Moroz.
+   Default styles are the final frame, so no-JS and reduced-motion get the finished picture. */
+.hero-phone { display: none; }
+
+@media (max-width: 740px) {
+  .clay-home .hero-photo { display: none; }
+  .clay-home .hero-phone {
+    --ease-out: cubic-bezier(.23, 1, .32, 1);
+    grid-area: photo;
+    display: block;
+    position: relative;
+    width: min(62vw, 235px);
+    aspect-ratio: 716 / 1190;
+    margin-inline: auto;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.hp-body, .hp-buzz { position: absolute; inset: 0; }
+.hp-body { filter: drop-shadow(0 16px 18px #2b4a6a33); }
+
+.hp-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hp-screen {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: url('art/phone-screen-mask.png') center / 100% 100% no-repeat;
+  mask: url('art/phone-screen-mask.png') center / 100% 100% no-repeat;
+}
+/* Measured from the magenta screen: centre 362/577, size 506×918, tilted 5.03deg. */
+.hp-panel {
+  position: absolute;
+  left: 15.24%;
+  top: 9.9%;
+  width: 70.67%;
+  height: 77.14%;
+  transform: rotate(5.03deg);
+  container-type: size;
+  overflow: hidden;
+  background: #fff8ee;
+  color: #321527;
+  font-family: var(--clay-display, Nunito, sans-serif);
+}
+
+.hp-chat {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 4cqw;
+  padding: 7cqw 6cqw 7cqw;
+}
+.hp-head {
+  display: flex;
+  align-items: center;
+  gap: 4cqw;
+  font-weight: 800;
+  font-size: 8.4cqw;
+}
+.hp-avatar {
+  width: 17cqw;
+  height: 17cqw;
+  border-radius: 50%;
+  box-shadow: 0 0 0 .8cqw #fff8ee, 0 1cqw 2cqw #32152733;
+}
+.hp-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 40% 30%;
+  border-radius: 5cqw;
+}
+.hp-bubble {
+  margin: 0;
+  padding: 3.4cqw 4.5cqw 3.6cqw;
+  border-radius: 5cqw 5cqw 5cqw 1.5cqw;
+  background: #fff;
+  box-shadow: 0 1cqw 3cqw #3215271a;
+  font-weight: 700;
+  font-size: 6.4cqw;
+  line-height: 1.25;
+  text-align: left;
+  transform-origin: 0 100%;
+}
+.hp-bubble time {
+  float: right;
+  margin: 1.6cqw 0 0 3cqw;
+  color: #8a7480;
+  font-size: 4.8cqw;
+  font-weight: 600;
+}
+
+/* Night lock screen and the push; hidden in the final frame. */
+.hp-lock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20cqw;
+  background: #1c2342;
+  color: #f4ecff;
+  opacity: 0;
+  pointer-events: none;
+}
+.hp-clock { font-size: 25cqw; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+.hp-date { margin-top: 2cqw; font-size: 6.4cqw; font-weight: 700; opacity: .75; }
+
+.hp-push {
+  position: absolute;
+  top: 6cqw;
+  left: 5cqw;
+  right: 5cqw;
+  display: flex;
+  align-items: center;
+  gap: 3.5cqw;
+  padding: 4cqw;
+  border-radius: 6cqw;
+  background: #fff8eef2;
+  color: #321527;
+  box-shadow: 0 2cqw 6cqw #0b0f2a55;
+  opacity: 0;
+  pointer-events: none;
+}
+.hp-push .hp-avatar { width: 14cqw; height: 14cqw; box-shadow: none; }
+.hp-push b { display: block; font-size: 6.6cqw; font-weight: 800; }
+.hp-push span { display: block; font-size: 5.8cqw; font-weight: 600; color: #5e2a40; }
+
+.hero-phone:focus-visible { outline: 3px solid #321527; outline-offset: 6px; border-radius: 12%; }

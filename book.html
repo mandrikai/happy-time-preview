@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6ecdc">
+  <title>Сказка · Happy Time</title>
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="ht-page book-page">
+  <header class="bar-top">
+    <a href="./" class="logo"><img src="logo.png" alt="Happy Time"></a>
+    <span class="tag">Персональная сказка</span>
+  </header>
+  <main class="wrap">
+    <div class="book-head">
+      <h1 id="title"></h1>
+      <div class="status" id="status" role="status">Персональные книги доступны в полной версии сайта.</div>
+      <div class="progress" hidden><div id="bar"></div></div>
+    </div>
+
+    <div class="book-tools">
+      <div class="pager" id="pager" hidden aria-label="Листание книги">
+        <button id="prev" aria-label="Предыдущий разворот"><svg class="ht-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 12H5m6-6-6 6 6 6"/></svg></button>
+        <span id="pos" aria-live="polite"></span>
+        <button id="nextp" aria-label="Следующий разворот"><svg class="ht-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button>
+      </div>
+      <a class="btn main" id="pdf" href="#" hidden>Скачать PDF</a>
+    </div>
+    <div class="slider" id="pages" tabindex="0" aria-label="Развороты книги"></div>
+
+    <div class="end" id="end" hidden>
+      <a class="btn" href="./">Ещё одна сказка</a>
+      <section class="print" id="print">
+        <h2>Печатная книга</h2>
+        <p class="hint">Твёрдая обложка, 20×20 см, 26 страниц. Оставьте телефон, мы свяжемся и всё оформим.</p>
+        <div class="row">
+          <input type="tel" id="phone" aria-label="Номер телефона" placeholder="+7 900 000-00-00" inputmode="tel" autocomplete="tel">
+          <button class="cta" id="order">Хочу книгу</button>
+        </div>
+        <p class="error" id="perr" role="status"></p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
