@@ -194,6 +194,19 @@
   border-radius: 0;
 }
 .clay-home .hero-photo img { max-height: 680px; }
+.clay-home .hero-photo { position: relative; }
+/* Position the photograph in the incoming message on the illustrated screen. */
+.clay-home .hero-photo::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 23.4375%;
+  inset-inline-start: 25.7%;
+  width: 12.5%;
+  aspect-ratio: 9 / 16;
+  transform: translateX(-50%);
+  border-radius: 8% / 4.5%;
+  background: url('art/santa-chat-portrait.webp') center / cover no-repeat;
+}
 :is(.clay-home, .clay-santa) .clay-button {
   min-width: 208px;
   min-height: 65px;
@@ -390,6 +403,7 @@
   }
   /* In-app browsers can resize the viewport when their controls collapse. */
   .clay-home .hero-photo img { max-height: 390px; }
+  .clay-home .hero-photo::after { content: none; }
   .clay-home .stories-grid {
     grid-template-areas: "art title" "copy copy";
     grid-template-columns: minmax(0, .4fr) minmax(0, .6fr);
