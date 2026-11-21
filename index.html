@@ -11,7 +11,7 @@
   <title>Фото и сказки про вашего ребёнка · Happy Time</title>
   <link rel="icon" href="logo.png">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="landing.css?v=title-ink">
+  <link rel="stylesheet" href="landing.css?v=hero-actions">
   <script src="story-teaser.js?v=stable-layout" defer></script>
 </head>
 <body class="ht-page clay-home">
@@ -32,16 +32,15 @@
         <div class="ht-hero-inner ht-shell wrap">
           <div class="hero-copy" data-enter>
             <h1 id="home-title"><span class="clay-lettering hero-clear-text"><span><b>Ф</b>ото</span> <b class="hero-title-connector">с</b> <span><b>Д</b>едом</span> <span>Мор<b>о</b>зом</span></span></h1>
-            <p><span class="hero-clear-text">Новогодний сюрприз из вашего снимка.</span></p>
-            <div class="hero-actions">
-              <a class="ht-button clay-button" href="santa.html"><span class="clay-lettering"><span>С<b>о</b>здать</span> <span><b>ф</b>ото</span></span></a>
-              <a class="ht-link" href="#stories">К сказкам</a>
-            </div>
           </div>
           <picture class="hero-photo">
             <source media="(max-width: 740px)" srcset="art/clay-santa-phone.webp" width="716" height="1190">
             <img src="art/clay-santa-selfie.webp" width="1248" height="1024" alt="Селфи Деда Мороза рядом со спящим ребёнком" fetchpriority="high">
           </picture>
+          <div class="hero-actions" data-enter>
+            <a class="ht-button clay-button" href="santa.html"><span class="clay-lettering"><span>С<b>о</b>здать</span> <span><b>ф</b>ото</span></span></a>
+            <a class="ht-link" href="#stories">К сказкам</a>
+          </div>
         </div>
       </section>
       <section id="stories" class="stories-band" aria-labelledby="stories-title" tabindex="-1">

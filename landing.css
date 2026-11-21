@@ -9,14 +9,23 @@
 .site-header nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-weight: 700; text-decoration: none; white-space: nowrap; }
 #intro .site-main .wrap { max-width: 1200px; padding-inline: 0; }
 #intro .site-main { max-width: none; margin: 0; padding: 0; }
-.ht-hero-inner { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: center; gap: clamp(30px, 7vw, 110px); min-height: calc(100svh - 84px - env(safe-area-inset-top)); padding-block: 28px 58px; }
+.ht-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  grid-template-rows: 1fr auto auto 1fr;
+  grid-template-areas: ". photo" "heading photo" "actions photo" ". photo";
+  align-items: center;
+  column-gap: clamp(30px, 7vw, 110px);
+  min-height: calc(100svh - 84px - env(safe-area-inset-top));
+  padding-block: 28px 58px;
+}
+.hero-copy { grid-area: heading; }
 .hero-copy h1 { max-width: 10ch; color: var(--forest); font-size: clamp(3.2rem, 7.5vw, 6rem); line-height: .99; letter-spacing: -.04em; }
-.hero-copy p { max-width: 35ch; margin: 20px 0 24px; color: var(--muted); font-size: clamp(1.0625rem, 1.7vw, 1.25rem); }
 .hero-actions .ht-link { display: inline-flex; align-items: center; min-height: 44px; }
-.hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 24px; }
-.hero-photo { margin: 0; min-width: 0; }
+.hero-actions { grid-area: actions; display: flex; align-items: center; flex-wrap: wrap; gap: 14px 24px; margin-block-start: 24px; }
+.hero-photo { grid-area: photo; margin: 0; min-width: 0; }
 .hero-photo img { display: block; width: 100%; height: clamp(410px, 46vw, 608px); object-fit: cover; object-position: 50% 43%; border-radius: 46% 46% 12px 12px / 31% 31% 12px 12px; }
-.hero-copy[data-enter] { animation: home-enter .5s var(--ease-out) both; }
+.ht-hero-inner > [data-enter] { animation: home-enter .5s var(--ease-out) both; }
 @keyframes home-enter { from { opacity: .75; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
 .stories-band { background: var(--forest); color: var(--paper); }
 .stories-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(30px, 7vw, 100px); padding-block: clamp(52px, 8vw, 112px); }
@@ -34,9 +43,15 @@
   .site-brand img { width: 96px; }
   .site-header nav { font-size: .875rem; }
   .ht-hero-inner, .stories-grid { grid-template-columns: minmax(0, 1fr); }
-  .ht-hero-inner { min-height: 0; gap: 26px; padding-block: 20px 40px; }
+  .ht-hero-inner {
+    grid-template-rows: auto;
+    grid-template-areas: "heading" "photo" "actions";
+    min-height: 0;
+    gap: 26px;
+    padding-block: 20px 40px;
+  }
   .hero-copy h1 { font-size: clamp(2.7rem, 10vw, 4.8rem); }
-  .hero-copy p { margin-block: 14px 18px; }
+  .hero-actions { justify-content: center; margin-block-start: 0; }
   .hero-photo img { height: min(104vw, 530px); }
   .story-art { order: 2; }
   .stories-grid { gap: 27px; }
@@ -46,7 +61,7 @@
   .site-header { flex-wrap: wrap; gap: 0 8px; }
   .site-header nav { gap: 10px; }
 }
-@media (prefers-reduced-motion: reduce) { .hero-copy[data-enter] { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .ht-hero-inner > [data-enter] { animation: none; } }
 
 .stories-band :focus-visible { outline-color: #fff8ed; }
 
@@ -140,7 +155,7 @@
   position: relative;
   grid-template-columns: minmax(0, .93fr) minmax(0, 1.07fr);
   min-height: auto;
-  gap: clamp(8px, 1.7vw, 24px);
+  column-gap: clamp(8px, 1.7vw, 24px);
   padding-block: clamp(18px, 4vw, 55px) clamp(30px, 5vw, 60px);
 }
 .clay-home .hero-copy h1,
@@ -169,7 +184,6 @@
   font-size: clamp(3.2rem, 6.1vw, 5.25rem);
   line-height: .99;
 }
-.clay-home .hero-copy p { color: #654b5f; max-width: 30ch; }
 .clay-home .hero-actions .ht-link { color: var(--clay-ink); }
 .clay-home .hero-photo img, .clay-home .story-art img {
   width: 100%;
@@ -356,7 +370,6 @@
     padding-block: 14px 18px;
   }
   .clay-home .hero-copy h1 { font-size: clamp(2rem, 10.7vw, 4.6rem); }
-  .clay-home .hero-copy p { margin-block: 10px 12px; }
   .clay-home .hero-actions { column-gap: clamp(12px, 5vw, 24px); row-gap: 6px; }
   :is(.clay-home, .clay-santa) .clay-button {
     min-width: clamp(164px, 51vw, 208px);
