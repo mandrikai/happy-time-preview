@@ -26,6 +26,7 @@ function setupUpload(mode) {
   const resultTitle = document.querySelector('#santa-result-title');
   const types = new Set(['image/jpeg', 'image/png', 'image/webp']);
   const formatError = 'Выберите JPG, PNG, WebP или HEIC размером до 7 МБ.';
+  const staticPreview = document.body.hasAttribute('data-static-preview');
 
   document.querySelector('#santa-instructions').textContent = hints[mode];
   document.body.dataset.santaMode = mode;
@@ -47,7 +48,7 @@ function setupUpload(mode) {
     let photo = file.files[0];
     fileError.textContent = '';
     result.hidden = true;
-    setStatus('', 'idle');
+    if (!staticPreview) setStatus('', 'idle');
 
     if (photo && !validPhoto(photo)) {
       file.value = '';
@@ -67,6 +68,11 @@ function setupUpload(mode) {
     pickerText.textContent = photo ? 'Заменить фото' : 'Загрузить фото';
     file.setAttribute('aria-describedby', photo ? 'santa-filename santa-file-error' : 'santa-file-hint santa-file-error');
   });
+
+  if (staticPreview) {
+    form.addEventListener('submit', event => event.preventDefault());
+    return;
+  }
 
   fetch('api/config').then((response) => {
     if (!response.ok) throw new Error('Не удалось загрузить настройки сайта.');
@@ -112,8 +118,8 @@ function setupUpload(mode) {
         const state = await reply.json();
         if (!reply.ok || state.status === 'failed') throw new Error(state.error || 'Не удалось создать фото.');
         if (state.status === 'done') {
-          document.querySelector('#santa-photo').src = `${endpoint}/photo`;
-          document.querySelector('#santa-download').href = `${endpoint}/photo?download=1`;
+          document.querySelector('#santa-photo').src = endpoint + '/photo';
+          document.querySelector('#santa-download').href = endpoint + '/photo?download=1';
           result.hidden = false;
           setStatus('', 'idle');
           resultTitle.focus();

@@ -21,7 +21,7 @@
   const knob = photos.querySelector('.pick-knob-position');
   const range = photos.querySelector('.pick-range');
   const note = document.querySelector('.pick-note');
-  const cta = document.querySelector('.pick-cta');
+  const ctas = document.querySelectorAll('.pick-cta');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let mode = 'sleeping';
   const REST = 30; // leave most of the frame to the result, where Santa is
@@ -112,7 +112,7 @@
     before.src = m.before[0]; before.width = m.before[1]; before.alt = m.before[2];
     after.src = m.after[0]; after.width = m.after[1]; after.alt = m.after[2];
     note.textContent = m.note;
-    cta.href = 'santa-upload.html?mode=' + next;
+    for (const cta of ctas) cta.href = 'santa-upload.html?mode=' + next;
   };
 
   let swapTimer;

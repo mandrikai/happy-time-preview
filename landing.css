@@ -71,7 +71,7 @@
 /* Общая палитра пластилиновых страниц. */
 .clay-home #intro,
 .clay-santa {
-  --clay-paper: #fff8ee;
+  --clay-paper: #f4eee3;
   --clay-ink: #321527;
   --clay-orange: #bd3c06;
   --clay-yellow: #ffda51;
@@ -80,7 +80,7 @@
   background: var(--clay-paper);
   color: var(--clay-ink);
 }
-.clay-home:has(#intro:not([hidden])), html:has(.clay-home #intro:not([hidden])) { background: #fff8ee; }
+.clay-home:has(#intro:not([hidden])), html:has(.clay-home #intro:not([hidden])) { background: #f4eee3; }
 .clay-home #intro { --home-header-height: 84px; }
 .clay-home .home-header-band,
 .clay-santa .santa-header-band {
