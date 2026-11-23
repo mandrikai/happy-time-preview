@@ -15,32 +15,25 @@ const storyVisibility = new IntersectionObserver(([entry]) => {
 storyVisibility.observe(storyArtwork);
 document.addEventListener('visibilitychange', updateStoryFlight);
 
-let viewportWidth;
-let viewportHeight;
-let revealAt;
+let storiesNearViewport = false;
 let storyRevealed = false;
 
 function updateStoryReveal() {
   // Reset near the top so a small change in scroll direction can't restart the reveal.
-  const revealed = window.scrollY >= (storyRevealed ? 24 : revealAt);
+  const revealed = storyRevealed ? window.scrollY > 24 : storiesNearViewport && window.scrollY >= 72;
   if (revealed === storyRevealed) return;
   storyRevealed = revealed;
-  storiesSection.setAttribute('data-story-transition', '');
   storiesSection.removeAttribute('data-story-settled');
   storiesSection.toggleAttribute('data-story-revealed', revealed);
 }
 
-function measureStoryTeaser() {
-  // Collapsing mobile browser controls must not move the animation's scroll range.
-  if (viewportWidth !== window.innerWidth) {
-    viewportWidth = window.innerWidth;
-    viewportHeight = window.innerHeight;
-  }
-  const sectionTop = storiesSection.getBoundingClientRect().top + window.scrollY;
-  revealAt = Math.max(72, sectionTop - viewportHeight + 108);
-}
+// Observe the section itself so the zoom, page layout changes and collapsing
+// browser controls cannot leave a stale document scroll threshold.
+const storyRevealVisibility = new IntersectionObserver(([entry]) => {
+  storiesNearViewport = entry.isIntersecting;
+  updateStoryReveal();
+}, { rootMargin: '0px 0px -48px 0px' });
 
-const teaserLayout = new ResizeObserver(measureStoryTeaser);
 storyArtwork.addEventListener('transitionend', event => {
   if (event.target === storyArtwork && event.propertyName === 'transform' && storyRevealed) {
     storiesSection.setAttribute('data-story-settled', '');
@@ -49,20 +42,14 @@ storyArtwork.addEventListener('transitionend', event => {
 
 function syncStoryTeaser() {
   storiesSection.toggleAttribute('data-story-expansion', expandedTeaser.matches);
-  storiesSection.removeAttribute('data-story-transition');
+  storiesNearViewport = false;
   storyRevealed = false;
   if (expandedTeaser.matches) {
-    viewportWidth = undefined;
-    measureStoryTeaser();
-    storyRevealed = window.scrollY >= revealAt;
-    teaserLayout.observe(document.querySelector('.home-header-band'));
-    teaserLayout.observe(document.querySelector('.ht-hero'));
+    storyRevealVisibility.observe(storiesSection);
     window.addEventListener('scroll', updateStoryReveal, { passive: true });
-    window.addEventListener('resize', measureStoryTeaser);
   } else {
-    teaserLayout.disconnect();
+    storyRevealVisibility.disconnect();
     window.removeEventListener('scroll', updateStoryReveal);
-    window.removeEventListener('resize', measureStoryTeaser);
   }
   storiesSection.toggleAttribute('data-story-revealed', storyRevealed);
   storiesSection.toggleAttribute('data-story-settled', storyRevealed);

@@ -235,7 +235,7 @@
   padding-inline: 0;
 }
 
-/* Below the fold: photo tips, a closing button and the site footer */
+/* Photo tips */
 .pick-tips {
   position: relative;
   margin: 8px 0 0;
@@ -307,8 +307,6 @@
   font-size: 1rem;
   line-height: 1.45;
 }
-.pick-tips .site-footer { color: #6b4a5f; border-top-color: #8a1e3c22; }
-.pick-tips .site-footer p { margin: 0; }
 
 @media (min-width: 741px) {
   .clay-santa { --stage-w: min(340px, max(160px, calc((100svh - 410px) * .6667))); }

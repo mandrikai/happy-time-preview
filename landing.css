@@ -458,19 +458,14 @@
     transform: translate(20%, calc(-1 * var(--story-heading-lift))) scale(.76);
   }
   .clay-home [data-story-expansion] .story-title-break { display: inline; }
-  .clay-home [data-story-transition] .story-art {
+  .clay-home [data-story-expansion] :is(.story-art, .story-title) {
     transition: transform 920ms ease-in-out;
-  }
-  .clay-home [data-story-transition] .story-title {
-    transition: transform 820ms ease-in-out 120ms;
   }
   .clay-home [data-story-revealed] .story-art {
     transform: translateX(var(--story-spine-offset)) scale(1);
-    transition-delay: 120ms;
   }
   .clay-home [data-story-revealed] .story-title {
     transform: translate(0, 0) scale(1);
-    transition-delay: 0ms;
   }
   .clay-home [data-story-expansion]:not([data-story-settled]) .story-art img {
     animation-play-state: paused;

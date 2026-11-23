@@ -6,7 +6,8 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#f4eee3">
   <link rel="icon" href="logo.png">
-  <link rel="stylesheet" href="santa-order.css?v=clay-wordmark">
+  <link rel="stylesheet" href="site-footer.css">
+  <link rel="stylesheet" href="santa-order.css?v=responsive-docs">
   <script src="santa-order.js" defer></script>
   <title>Тарифы · Happy Time</title>
 </head>
@@ -24,21 +25,58 @@
       <a class="back-link" href="santa-upload.html" data-doc-back>← К заказу</a>
       <article class="panel document">
         <p class="draft-notice">Рабочая редакция для макета</p>
-        <h1>Тарифы</h1>
-        <div class="doc-table" tabindex="0" role="region" aria-label="Таблица условий"><table><thead><tr><th scope="col">Вариант</th><th scope="col">Цена</th><th scope="col">Что входит</th></tr></thead><tbody><tr><td>Бесплатное превью</td><td>0 ₽</td><td>Просмотр готового снимка с водяным знаком</td></tr><tr><td>Цифровое фото</td><td>369 ₽</td><td>PDF без водяного знака</td></tr><tr><td>Печатное фото и PDF</td><td>550 ₽</td><td>Один отпечаток 10 × 15 см на глянцевой бумаге и PDF без водяного знака</td></tr></tbody></table></div>
+        <h1 id="tariffs-title">Тарифы</h1>
+        <table class="doc-table doc-table--tariffs" role="table" aria-labelledby="tariffs-title">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th scope="col" role="columnheader">Вариант</th>
+              <th class="tariffs-price" scope="col" role="columnheader">Цена</th>
+              <th scope="col" role="columnheader">Что входит</th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            <tr role="row">
+              <th scope="row" role="rowheader">Бесплатное превью</th>
+              <td class="tariffs-price" role="cell">0 ₽</td>
+              <td role="cell">Просмотр готового снимка с водяным знаком</td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader">Цифровое фото</th>
+              <td class="tariffs-price" role="cell">369 ₽</td>
+              <td role="cell">PDF без водяного знака</td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader">Печатное фото и PDF</th>
+              <td class="tariffs-price" role="cell">550 ₽</td>
+              <td role="cell">Один отпечаток 10 × 15 см на глянцевой бумаге и PDF без водяного знака</td>
+            </tr>
+          </tbody>
+        </table>
 <p><strong>Самовывоз отпечатков.</strong> Пушкин, Кузьминское шоссе, 66Д, салон Happy Time. Заказ можно забрать после уведомления о готовности.</p>
 <p>Цена печати и размер указаны для демонстрации. График выдачи и срок печати согласовываются.</p>
       </article>
     </div>
   </main>
-  <footer class="site-footer">
-    <div class="shell footer-inner">
-      <div>
-        <a class="brand" href="./"><span class="clay-wordmark clay-lettering"><span>Happy</span> <span>Time</span></span></a>
-        <p>ООО «Счастливое время»</p>
-        <a href="tel:+79217700271">+7 (921) 770-02-71</a>
+  <footer class="ht-footer">
+    <div class="ht-footer__inner">
+      <div class="ht-footer__identity">
+        <div class="ht-footer__contact">
+          <a class="ht-footer__brand" href="./"><span>Happy</span> <span>Time</span></a>
+          <a class="ht-footer__phone" href="tel:+79217700271">+7 (921) 770-02-71</a>
+        </div>
+        <div class="ht-footer__company">
+          <p>Семейная парикмахерская · Пушкин</p>
+          <p>ООО «Счастливое время»</p>
+        </div>
       </div>
-      <nav aria-label="Документы и контакты"><a href="santa-order-tariffs.html">Тарифы</a><a href="santa-order-offer.html">Публичная оферта</a><a href="santa-order-refunds.html">Возвраты</a><a href="santa-order-privacy.html">Политика обработки персональных данных</a><a href="santa-order-consent.html">Согласие на обработку фото</a><a href="santa-order-contacts.html">Контакты и реквизиты</a></nav>
+      <nav class="ht-footer__links" aria-label="Документы и контакты">
+        <a href="santa-order-tariffs.html">Тарифы</a>
+        <a href="santa-order-offer.html">Публичная оферта</a>
+        <a href="santa-order-refunds.html">Возвраты</a>
+        <a href="santa-order-privacy.html">Политика обработки персональных данных</a>
+        <a href="santa-order-consent.html">Согласие на обработку фото</a>
+        <a href="santa-order-contacts.html">Контакты и реквизиты</a>
+      </nav>
     </div>
   </footer>
 </body>
