@@ -145,6 +145,8 @@
 }
 .pick-tag-before { left: 10px; }
 .pick-tag-after { right: 10px; }
+.pick-photos[data-edge="left"] .pick-tag-before,
+.pick-photos[data-edge="right"] .pick-tag-after { opacity: 0; }
 
 .pick-track {
   position: absolute;

@@ -2,21 +2,48 @@ const params = new URLSearchParams(location.search);
 const mode = params.get('mode') === 'ordinary' ? 'ordinary' : 'sleeping';
 const product = params.get('product') === 'print' ? 'print' : 'pdf';
 const isPrint = product === 'print';
+const previewId = params.get('preview');
+const previewStorageKey = 'happy-time-order-preview';
 const orderPages = {
   preview: 'santa-order-preview.html',
   checkout: 'santa-checkout.html',
   order: 'santa-order.html',
 };
 
-function orderUrl(page, selectedMode = mode, selectedProduct) {
+function orderUrl(page, selectedMode = mode, selectedProduct, selectedPreview = previewId) {
   const query = new URLSearchParams({ mode: selectedMode });
   if (selectedProduct) query.set('product', selectedProduct);
+  if (selectedPreview) query.set('preview', selectedPreview);
   return `${orderPages[page]}?${query}`;
 }
 
-document.querySelectorAll('[data-sample]').forEach(image => {
-  image.src = `santa-examples/${mode}-result.jpg`;
-});
+async function showOrderPreview(canvas) {
+  const content = document.querySelector('[data-preview-content]');
+  const unavailable = document.querySelector('[data-preview-unavailable]');
+  unavailable.querySelector('a').href = `santa-upload.html?mode=${mode}`;
+  try {
+    const saved = previewId && JSON.parse(sessionStorage.getItem(previewStorageKey));
+    if (!saved || saved.id !== previewId || saved.mode !== mode ||
+        !saved.jpeg?.startsWith('data:image/jpeg;base64,')) {
+      unavailable.hidden = false;
+      return;
+    }
+    const { drawPreviewJpeg } = await import('./santa-preview-image.js');
+    await drawPreviewJpeg(canvas, saved.jpeg);
+    const frame = canvas.closest('[data-protected-photo]');
+    frame.addEventListener('contextmenu', event => event.preventDefault());
+    if (frame.classList.contains('photo-frame')) {
+      frame.style.aspectRatio = Math.max(2 / 3, Math.min(16 / 9, canvas.width / canvas.height));
+    }
+    content.hidden = false;
+  } catch {
+    unavailable.hidden = false;
+  }
+}
+
+const previewCanvas = document.querySelector('[data-preview-canvas]');
+if (previewCanvas) showOrderPreview(previewCanvas);
+
 document.querySelectorAll('[data-product-link]').forEach(link => {
   link.href = orderUrl('checkout', mode, link.dataset.productLink);
 });
@@ -96,7 +123,7 @@ if (photoForm) {
     setPhotoSelected(false);
     note.textContent = 'Файл не открылся. Выберите другое фото.';
   });
-  photoForm.addEventListener('submit', event => {
+  photoForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (previewTimer !== undefined) return;
     if (!fileUrl) {
@@ -104,20 +131,37 @@ if (photoForm) {
       fileInput.focus();
       return;
     }
-    const previewUrl = orderUrl('preview', photoForm.elements.mode.value);
+    const selectedMode = photoForm.elements.mode.value;
+    const photo = fileInput.files[0];
     setPhotoLoading(true);
     loadingTitle.focus({ preventScroll: true });
     window.scrollTo(0, 0);
     const startedAt = performance.now();
-    previewTimer = window.setInterval(() => {
+    const timer = window.setInterval(() => {
       const elapsed = performance.now() - startedAt;
-      const progress = Math.min(100, Math.floor(elapsed / demoLoadingDuration * 100));
-      setProgress(progress);
-      if (progress === 100) {
-        window.clearInterval(previewTimer);
-        location.href = previewUrl;
-      }
+      setProgress(Math.min(98, Math.floor(elapsed / demoLoadingDuration * 100)));
     }, 100);
+    previewTimer = timer;
+    try {
+      const { createWatermarkedJpeg } = await import('./santa-preview-image.js');
+      const jpeg = await createWatermarkedJpeg(photo);
+      const remaining = demoLoadingDuration - (performance.now() - startedAt);
+      if (remaining > 0) await new Promise(resolve => window.setTimeout(resolve, remaining));
+      if (previewTimer !== timer) return;
+      const id = crypto.randomUUID();
+      sessionStorage.setItem(previewStorageKey, JSON.stringify({ id, mode: selectedMode, jpeg }));
+      window.clearInterval(timer);
+      setProgress(100);
+      location.href = orderUrl('preview', selectedMode, undefined, id);
+    } catch {
+      if (previewTimer !== timer) return;
+      window.clearInterval(timer);
+      previewTimer = undefined;
+      setProgress(0);
+      setPhotoLoading(false);
+      note.textContent = 'Не удалось создать превью. Попробуйте выбрать фото в JPG, PNG или WebP.';
+      fileInput.focus();
+    }
   });
   window.addEventListener('pageshow', event => {
     if (!event.persisted || previewTimer === undefined) return;

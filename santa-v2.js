@@ -16,6 +16,7 @@
   const photos = document.querySelector('.pick-photos');
   const before = photos.querySelector('.pick-before');
   const after = photos.querySelector('.pick-after');
+  const afterTag = photos.querySelector('.pick-tag-after');
   const reveal = photos.querySelector('.pick-reveal');
   const handle = photos.querySelector('.pick-handle');
   const knob = photos.querySelector('.pick-knob-position');
@@ -26,6 +27,8 @@
   let mode = 'sleeping';
   const REST = 30; // leave most of the frame to the result, where Santa is
   const MIN = 0, MAX = 100;
+  const beforeLabelThreshold = 22;
+  const afterLabelThreshold = 78;
   const parts = [
     [reveal, value => `translateX(${value}%)`],
     [after, value => `translateX(${-value}%)`],
@@ -40,6 +43,8 @@
   const clamp = value => Math.max(MIN, Math.min(MAX, value));
   const setPos = value => {
     for (const [part, transform] of parts) part.style.transform = transform(value);
+    const edge = value < beforeLabelThreshold ? 'left' : value > afterLabelThreshold ? 'right' : '';
+    if (photos.dataset.edge !== edge) photos.dataset.edge = edge;
   };
   const stopIntro = () => {
     introAllowed = false;
@@ -152,10 +157,19 @@
   if (introAllowed && reveal.animate) {
     const ready = () => {
       if (!introAllowed) return;
+      const start = 96;
+      const timing = { delay: 300, duration: 1250, easing: 'cubic-bezier(.23, 1, .32, 1)', fill: 'backwards' };
       intro = parts.map(([part, transform]) => part.animate(
-        [{ transform: transform(96) }, { transform: transform(REST) }],
-        { delay: 300, duration: 1250, easing: 'cubic-bezier(.23, 1, .32, 1)', fill: 'backwards' }
+        [{ transform: transform(start) }, { transform: transform(REST) }],
+        timing
       ));
+      const showAfter = (start - afterLabelThreshold) / (start - REST);
+      intro.push(afterTag.animate([
+        { opacity: 0 },
+        { opacity: 0, offset: showAfter },
+        { opacity: 1, offset: showAfter },
+        { opacity: 1 },
+      ], timing));
     };
     after.complete ? ready() : after.addEventListener('load', ready, { once: true });
   }

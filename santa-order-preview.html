@@ -8,8 +8,8 @@
   <link rel="icon" href="logo.png">
   <link rel="stylesheet" href="site-menu.css">
   <link rel="stylesheet" href="site-footer.css?v=contact-row">
-  <link rel="stylesheet" href="santa-order.css?v=plain-menu">
-  <script src="santa-order.js" defer></script>
+  <link rel="stylesheet" href="santa-order.css?v=personal-preview">
+  <script src="santa-order.js?v=personal-preview" defer></script>
   <title>Ваше фото готово · Happy Time</title>
 </head>
 <body>
@@ -21,15 +21,18 @@
   </header>
   <main class="snow" id="main" data-page="preview">
     <div class="shell">
-      <div class="preview-layout">
+      <section class="panel success-panel" data-preview-unavailable hidden>
+        <h1>Сначала выберите фото</h1>
+        <a class="primary" href="santa-upload.html">Выбрать фото</a>
+      </section>
+      <div class="preview-layout" data-preview-content hidden>
         <section class="preview-heading">
           <h1 id="preview-title">Ваше фото<br class="desktop-break"> готово!</h1>
-          <p class="lead">В демоверсии показан пример. Выберите, как хотите получить снимок.</p>
+          <p class="lead">Превью выбранного фото с водяным знаком. Выберите, как хотите получить снимок.</p>
         </section>
         <figure class="preview-figure">
-          <div class="photo-frame">
-            <img data-sample src="santa-examples/sleeping-result.jpg" alt="Пример фото ребёнка с Дедом Морозом" width="564" height="850">
-            <div class="watermark" aria-hidden="true"><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span><span>Happy Time</span></div>
+          <div class="photo-frame" data-protected-photo>
+            <canvas data-preview-canvas role="img" aria-label="Превью фото с водяным знаком Happy Time"></canvas>
           </div>
         </figure>
         <div class="products">

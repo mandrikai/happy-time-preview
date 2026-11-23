@@ -416,7 +416,7 @@
     font-size: clamp(1.55rem, 6.7vw, 3.2rem);
   }
 }
-@media (prefers-reduced-motion: no-preference) {
+@media (min-width: 741px) and (prefers-reduced-motion: no-preference) {
   .clay-home .story-art img {
     animation: storybook-flight 3.8s ease-in-out infinite;
     animation-play-state: paused;
@@ -428,9 +428,9 @@
     50% { transform: translateY(-11px) rotate(-3deg); }
   }
 }
-@media (min-width: 360px) and (max-width: 740px) and (prefers-reduced-motion: no-preference) {
-  .clay-home [data-story-expansion] { overflow-x: clip; }
-  .clay-home [data-story-expansion] .stories-grid {
+@media (min-width: 360px) and (max-width: 740px) {
+  .clay-home .stories-band { overflow-x: clip; }
+  .clay-home .stories-grid {
     --story-art-size: min(72vw, 320px);
     --story-heading-gap: 18px;
     /* The orange rays extend past the book on the right. */
@@ -440,35 +440,48 @@
     gap: var(--story-heading-gap);
     padding-top: 20px;
   }
-  .clay-home [data-story-expansion] .story-art {
+  .clay-home .story-art {
     justify-self: center;
     width: var(--story-art-size);
     max-width: 100%;
     transform-origin: center top;
-    transform: translateX(-35%) scale(.49);
+    transform: translateX(var(--story-spine-offset));
   }
-  .clay-home [data-story-expansion] .story-art img {
-    transform-origin: calc(50% - var(--story-spine-offset)) 72%;
-  }
-  .clay-home [data-story-expansion] .story-title {
+  .clay-home .story-title {
     font-size: clamp(1.75rem, 8.4vw, 3.4rem);
     text-align: center;
     transform-origin: center top;
+  }
+  .clay-home .story-title-break { display: inline; }
+}
+@media (min-width: 360px) and (max-width: 740px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 38%) {
+    .clay-home .stories-band { view-timeline-name: --story-reveal; }
+    .clay-home :is(.story-art, .story-title) {
+      animation-duration: auto;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: both;
+      animation-timeline: --story-reveal;
+      animation-range: entry 0% entry 38%;
+    }
+    .clay-home .story-art { animation-name: reveal-story-art; }
+    .clay-home .story-title { animation-name: reveal-story-title; }
+  }
+  @supports not ((animation-timeline: view()) and (animation-range: entry 0% entry 38%)) {
+    .clay-home [data-story-enter] .story-art { animation: reveal-story-art 880ms ease-in-out both; }
+    .clay-home [data-story-enter] .story-title { animation: reveal-story-title 880ms ease-in-out both; }
+    .clay-home [data-story-enter="waiting"] :is(.story-art, .story-title) { animation-play-state: paused; }
+  }
+  .clay-home .story-title {
     --story-heading-lift: calc(var(--story-art-size) * 454 / 680 + var(--story-heading-gap) - 14px);
-    transform: translate(20%, calc(-1 * var(--story-heading-lift))) scale(.76);
   }
-  .clay-home [data-story-expansion] .story-title-break { display: inline; }
-  .clay-home [data-story-expansion] :is(.story-art, .story-title) {
-    transition: transform 920ms ease-in-out;
+  @keyframes reveal-story-art {
+    from { transform: translateX(-35%) scale(.49); }
+    to { transform: translateX(var(--story-spine-offset)) scale(1); }
   }
-  .clay-home [data-story-revealed] .story-art {
-    transform: translateX(var(--story-spine-offset)) scale(1);
-  }
-  .clay-home [data-story-revealed] .story-title {
-    transform: translate(0, 0) scale(1);
-  }
-  .clay-home [data-story-expansion]:not([data-story-settled]) .story-art img {
-    animation-play-state: paused;
+  @keyframes reveal-story-title {
+    from { transform: translate(20%, calc(-1 * var(--story-heading-lift))) scale(.76); }
+    to { transform: translate(0, 0) scale(1); }
   }
 }
 @media (prefers-reduced-motion: reduce) { :is(.clay-home, .clay-santa) .clay-button:not(:disabled):hover { transform: none; } }

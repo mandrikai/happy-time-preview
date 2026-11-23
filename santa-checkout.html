@@ -8,8 +8,8 @@
   <link rel="icon" href="logo.png">
   <link rel="stylesheet" href="site-menu.css">
   <link rel="stylesheet" href="site-footer.css?v=contact-row">
-  <link rel="stylesheet" href="santa-order.css?v=plain-menu">
-  <script src="santa-order.js" defer></script>
+  <link rel="stylesheet" href="santa-order.css?v=personal-preview">
+  <script src="santa-order.js?v=personal-preview" defer></script>
   <title>Оформление заказа · Happy Time</title>
 </head>
 <body>
@@ -21,36 +21,41 @@
   </header>
   <main class="snow" id="main" data-page="checkout">
     <div class="shell">
-      <a class="back-link" href="santa-order-preview.html" data-preview-link>← К превью</a>
-      <h1 class="center-title">Оформление заказа</h1>
-      <div class="checkout-layout">
-        <section class="panel order-summary" aria-labelledby="summary-heading">
-          <h2 id="summary-heading">Ваш заказ</h2>
-          <div class="order-item">
-            <div class="order-thumbnail">
-              <img data-sample src="santa-examples/sleeping-result.jpg" alt="" width="564" height="850">
-              <span aria-hidden="true">Happy Time</span>
+      <section class="panel success-panel" data-preview-unavailable hidden>
+        <h1>Сначала выберите фото</h1>
+        <a class="primary" href="santa-upload.html">Выбрать фото</a>
+      </section>
+      <div data-preview-content hidden>
+        <a class="back-link" href="santa-order-preview.html" data-preview-link>← К превью</a>
+        <h1 class="center-title">Оформление заказа</h1>
+        <div class="checkout-layout">
+          <section class="panel order-summary" aria-labelledby="summary-heading">
+            <h2 id="summary-heading">Ваш заказ</h2>
+            <div class="order-item">
+              <div class="order-thumbnail" data-protected-photo>
+                <canvas data-preview-canvas aria-hidden="true"></canvas>
+              </div>
+              <div><strong data-product-name>Цифровое фото</strong><p data-product-desc>PDF без водяного знака</p></div>
             </div>
-            <div><strong data-product-name>Цифровое фото</strong><p data-product-desc>PDF без водяного знака</p></div>
-          </div>
-          <p class="pickup" data-for-print hidden>Самовывоз после уведомления о готовности<br>Пушкин, Кузьминское шоссе, 66Д, салон Happy Time</p>
-          <div class="total"><span>К оплате</span><strong data-price>369 ₽</strong></div>
-        </section>
-        <form class="panel pay-panel" id="pay-form">
-          <h2>Куда отправить чек?</h2>
-          <label class="field-label" for="receipt-email">Электронная почта</label>
-          <div class="email-field">
-            <input id="receipt-email" type="email" autocomplete="off" placeholder="name@example.com" required>
-            <button class="text-button" id="fill-example" type="button">Взять пример</button>
-          </div>
-          <p class="hint" data-for-print hidden>На этот адрес также придёт уведомление о самовывозе.</p>
-          <div class="agreement">
-            <input id="offer-accepted" type="checkbox" required>
-            <label for="offer-accepted">Принимаю условия <a href="santa-order-offer.html" target="_blank" rel="noopener">публичной оферты</a>.</label>
-          </div>
-          <button class="primary" type="submit" data-pay>Оплатить 369 ₽</button>
-          <p class="hint payment-note">Демо оплаты через Т‑Банк. Списания и отправки писем нет.</p>
-        </form>
+            <p class="pickup" data-for-print hidden>Самовывоз после уведомления о готовности<br>Пушкин, Кузьминское шоссе, 66Д, салон Happy Time</p>
+            <div class="total"><span>К оплате</span><strong data-price>369 ₽</strong></div>
+          </section>
+          <form class="panel pay-panel" id="pay-form">
+            <h2>Куда отправить чек?</h2>
+            <label class="field-label" for="receipt-email">Электронная почта</label>
+            <div class="email-field">
+              <input id="receipt-email" type="email" autocomplete="off" placeholder="name@example.com" required>
+              <button class="text-button" id="fill-example" type="button">Взять пример</button>
+            </div>
+            <p class="hint" data-for-print hidden>На этот адрес также придёт уведомление о самовывозе.</p>
+            <div class="agreement">
+              <input id="offer-accepted" type="checkbox" required>
+              <label for="offer-accepted">Принимаю условия <a href="santa-order-offer.html" target="_blank" rel="noopener">публичной оферты</a>.</label>
+            </div>
+            <button class="primary" type="submit" data-pay>Оплатить 369 ₽</button>
+            <p class="hint payment-note">Демо оплаты через Т‑Банк. Списания и отправки писем нет.</p>
+          </form>
+        </div>
       </div>
     </div>
   </main>

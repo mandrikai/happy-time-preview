@@ -420,16 +420,20 @@ html[data-photo-loading] {
   pointer-events: none;
   filter: drop-shadow(0 8px 10px #3a3c513d);
 }
-.photo-frame > img, .watermark { position: absolute; inset: 12px; width: calc(100% - 24px); height: calc(100% - 24px); border-radius: 12px; }
-.photo-frame > img { object-fit: cover; }
-.watermark { display: grid; grid-template-columns: repeat(3, 1fr); align-items: center; justify-items: center; overflow: hidden; pointer-events: none; }
-.watermark span {
-  transform: rotate(-26deg);
-  color: #fff8ecb3;
-  font: 850 clamp(.62rem, 1.35vw, .91rem)/1 var(--display);
-  text-shadow: 0 1px 2px #42273cbb;
-  white-space: nowrap;
+.photo-frame > canvas {
+  position: absolute;
+  inset: 12px;
+  width: calc(100% - 24px);
+  height: calc(100% - 24px);
+  border-radius: 12px;
+  object-fit: contain;
 }
+[data-protected-photo] {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+[data-protected-photo] canvas { display: block; pointer-events: none; }
 .products { grid-area: buy; display: grid; gap: 12px; margin-top: 0; }
 .product-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 10px 12px; padding: 18px; border-radius: 19px; }
 .product-card p, .order-item p { color: var(--muted); font-size: .87rem; margin-top: 4px; }
@@ -441,8 +445,7 @@ html[data-photo-loading] {
 .checkout-layout { display: grid; grid-template-columns: 1fr 1.05fr; align-items: start; gap: 20px; max-width: 875px; margin-inline: auto; }
 .order-item { display: flex; gap: 14px; align-items: center; margin: 17px 0; }
 .order-thumbnail { position: relative; flex: 0 0 64px; overflow: hidden; border-radius: 10px; }
-.order-thumbnail img { width: 100%; }
-.order-thumbnail span { position: absolute; inset: 44% 0 auto; color: #fff8ecbc; font-size: .63rem; font-weight: 800; text-align: center; text-shadow: 0 1px #543240; transform: rotate(-18deg); }
+.order-thumbnail canvas { width: 100%; height: auto; }
 .total { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; font-weight: 850; }
 .total strong { color: var(--berry); font-size: 1.6rem; }
 .pay-panel h2 { margin-bottom: 14px; }
@@ -505,7 +508,7 @@ html[data-photo-loading] {
   .preview-heading { text-align: center; }
   .preview-figure { width: min(68%, 275px); }
   .photo-frame::after { border-image-width: 18px; }
-  .photo-frame > img, .watermark { inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); }
+  .photo-frame > canvas { inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); }
   .doc-table, .doc-table tbody { display: block; }
   .doc-table thead {
     position: absolute;

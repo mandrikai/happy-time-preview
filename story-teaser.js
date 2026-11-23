@@ -1,7 +1,6 @@
 const storiesSection = document.getElementById('stories');
 const storyArtwork = storiesSection.querySelector('.story-art');
 const mobileStories = matchMedia('(max-width: 740px)');
-const expandedTeaser = matchMedia('(min-width: 360px) and (max-width: 740px) and (prefers-reduced-motion: no-preference)');
 
 let artworkVisible = false;
 function updateStoryFlight() {
@@ -15,50 +14,20 @@ const storyVisibility = new IntersectionObserver(([entry]) => {
 storyVisibility.observe(storyArtwork);
 document.addEventListener('visibilitychange', updateStoryFlight);
 
-let storiesNearViewport = false;
-let storyRevealed = false;
-
-function updateStoryReveal() {
-  // Reset near the top so a small change in scroll direction can't restart the reveal.
-  const revealed = storyRevealed ? window.scrollY > 24 : storiesNearViewport && window.scrollY >= 72;
-  if (revealed === storyRevealed) return;
-  storyRevealed = revealed;
-  storiesSection.removeAttribute('data-story-settled');
-  storiesSection.toggleAttribute('data-story-revealed', revealed);
-}
-
-// Observe the section itself so the zoom, page layout changes and collapsing
-// browser controls cannot leave a stale document scroll threshold.
-const storyRevealVisibility = new IntersectionObserver(([entry]) => {
-  storiesNearViewport = entry.isIntersecting;
-  updateStoryReveal();
-}, { rootMargin: '0px 0px -48px 0px' });
-
-storyArtwork.addEventListener('transitionend', event => {
-  if (event.target === storyArtwork && event.propertyName === 'transform' && storyRevealed) {
-    storiesSection.setAttribute('data-story-settled', '');
-  }
-});
-
-function syncStoryTeaser() {
-  storiesSection.toggleAttribute('data-story-expansion', expandedTeaser.matches);
-  storiesNearViewport = false;
-  storyRevealed = false;
-  if (expandedTeaser.matches) {
-    storyRevealVisibility.observe(storiesSection);
-    window.addEventListener('scroll', updateStoryReveal, { passive: true });
-  } else {
-    storyRevealVisibility.disconnect();
-    window.removeEventListener('scroll', updateStoryReveal);
-  }
-  storiesSection.toggleAttribute('data-story-revealed', storyRevealed);
-  storiesSection.toggleAttribute('data-story-settled', storyRevealed);
-}
-
-expandedTeaser.addEventListener('change', syncStoryTeaser);
-syncStoryTeaser();
-
 const reduceStoryMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+// Start once on older Safari. Observe the fixed section, so the animation
+// cannot change the threshold that starts it.
+if (!CSS.supports('(animation-timeline: view()) and (animation-range: entry 0% entry 38%)')) {
+  storiesSection.dataset.storyEnter = 'waiting';
+  const storyEntry = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    storiesSection.dataset.storyEnter = 'playing';
+    storyEntry.disconnect();
+  }, { rootMargin: '0px 0px -120px 0px' });
+  storyEntry.observe(storiesSection);
+}
+
 let storyScroll;
 
 function scrollToStories(event) {
