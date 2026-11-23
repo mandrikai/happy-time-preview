@@ -56,8 +56,9 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   overflow: clip;
   background: var(--blue);
 }
-.snow::before {
-  content: "";
+.snow::before { content: ""; }
+.upload-page > .snow::before { content: none; }
+.snow::before, .snow-flakes {
   position: absolute;
   inset: calc(-1 * var(--snow-tile-height)) 0 0;
   z-index: -1;
@@ -70,20 +71,35 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   filter: var(--snow-filter);
   mix-blend-mode: screen;
 }
-.snow:has(.photo-loading:not([hidden]))::before {
+html[data-photo-loading] {
+  background: var(--blue);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+[data-photo-loading] .upload-page {
+  min-height: 100dvh;
+}
+[data-photo-loading] .upload-page > :is(.site-header, .ht-footer) {
+  display: none;
+}
+[data-photo-loading] .upload-page > .snow {
+  display: grid;
+  align-items: center;
+  padding-block: max(env(safe-area-inset-top), env(safe-area-inset-bottom));
+  padding-inline: max(env(safe-area-inset-left), env(safe-area-inset-right));
+}
+[data-photo-loading] .snow-flakes {
   filter: var(--snow-filter) blur(3px);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .snow::before { animation: snowfall 34s linear infinite; }
+  .snow::before, .snow-flakes { animation: snowfall 34s linear infinite; }
 }
 @keyframes snowfall {
   to { transform: translateY(var(--snow-tile-height)); }
 }
 .photo-loading {
   display: grid;
-  align-content: center;
   justify-items: center;
-  min-height: min(58svh, 460px);
 }
 .photo-loading-meter { display: grid; gap: 16px; width: min(100%, 320px); }
 .photo-loading-track {
@@ -126,7 +142,12 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   filter: grayscale(1) brightness(1.23) drop-shadow(0 3px 2px #325b784f);
 }
 @media (prefers-reduced-motion: no-preference) {
+  .photo-loading-meter { animation: show-photo-loading 180ms ease-out both; }
   .photo-loading-fill, .photo-loading-marker { transition: transform 100ms linear; }
+}
+@keyframes show-photo-loading {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .photo-loading-label {
   display: flex;
@@ -170,6 +191,10 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   background: var(--blue);
   font-family: var(--display);
 }
+.upload-page > :is(.site-header, .snow, .ht-footer) {
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+}
+.upload-page > .site-header { padding-top: env(safe-area-inset-top); }
 .clay-lettering > span, .clay-lettering b {
   display: inline-block;
   font-weight: inherit;

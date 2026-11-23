@@ -37,6 +37,8 @@ if (photoForm) {
   const fileInput = document.getElementById('photo-file');
   const image = document.getElementById('picked-photo');
   const note = document.getElementById('file-note');
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  const uploadThemeColor = themeColor?.content;
   const demoLoadingDuration = 6000;
   const heic = photo => /^image\/hei[cf](?:-sequence)?$/i.test(photo.type) || /\.hei[cf]$/i.test(photo.name);
   const photoTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -48,6 +50,13 @@ if (photoForm) {
     progressBar.setAttribute('aria-valuenow', value);
     progressBar.style.setProperty('--photo-progress', `${value}%`);
     progressPercent.textContent = `${value}%`;
+  }
+
+  function setPhotoLoading(active) {
+    document.documentElement.toggleAttribute('data-photo-loading', active);
+    uploadLayout.hidden = active;
+    loading.hidden = !active;
+    if (themeColor) themeColor.content = active ? '#beddf3' : uploadThemeColor;
   }
 
   fileInput.addEventListener('change', () => {
@@ -86,8 +95,7 @@ if (photoForm) {
       return;
     }
     const previewUrl = orderUrl('preview', photoForm.elements.mode.value);
-    uploadLayout.hidden = true;
-    loading.hidden = false;
+    setPhotoLoading(true);
     loadingTitle.focus({ preventScroll: true });
     window.scrollTo(0, 0);
     const startedAt = performance.now();
@@ -105,8 +113,7 @@ if (photoForm) {
     if (!event.persisted || previewTimer === undefined) return;
     window.clearInterval(previewTimer);
     previewTimer = undefined;
-    loading.hidden = true;
-    uploadLayout.hidden = false;
+    setPhotoLoading(false);
     setProgress(0);
   });
 }
