@@ -17,7 +17,7 @@ function orderUrl(page, selectedMode = mode, selectedProduct, selectedPreview = 
   return `${orderPages[page]}?${query}`;
 }
 
-const previewContent = document.querySelector('[data-preview-content]');
+let previewContent = document.querySelector('[data-preview-content]');
 const previewMarkup = `
 <section class="preview-heading">
   <h1 id="preview-title" tabindex="-1">Ваше фото<br class="desktop-break"> готово!</h1>
@@ -90,6 +90,13 @@ document.querySelectorAll('[data-for-print]').forEach(element => {
 const photoForm = document.getElementById('photo-form');
 if (photoForm) {
   const uploadLayout = photoForm.closest('.upload-layout');
+  if (!previewContent) {
+    previewContent = document.createElement('div');
+    previewContent.className = 'preview-layout';
+    previewContent.setAttribute('data-preview-content', '');
+    previewContent.hidden = true;
+    uploadLayout.after(previewContent);
+  }
   const loading = document.getElementById('photo-loading');
   const loadingTitle = document.getElementById('photo-loading-title');
   const progressBar = document.getElementById('photo-progress');
