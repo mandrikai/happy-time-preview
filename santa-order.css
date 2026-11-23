@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Nunito";
-  src: url("assets/nunito.ttf") format("truetype");
+  src: url("art/nunito.ttf") format("truetype");
   font-style: normal;
   font-weight: 400 1000;
   font-display: swap;
@@ -62,7 +62,7 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   inset: calc(-1 * var(--snow-tile-height)) 0 0;
   z-index: -1;
   pointer-events: none;
-  background-image: url("assets/hero-gap-flakes.png"), url("assets/hero-snowflakes.webp");
+  background-image: url("art/hero-gap-flakes.png"), url("art/hero-snowflakes.webp");
   background-position: center top;
   background-size: auto var(--snow-tile-height);
   background-repeat: repeat-y;
@@ -181,7 +181,7 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
 .clay-lettering > span:nth-of-type(2) b { transform: rotate(3.2deg) translateY(.035em); }
 .upload-page .site-footer { border-radius: 44% 56% 0 0 / 18px 21px 0 0; }
 .upload-panel {
-  --clay-cream-button: url("assets/clay-santa-button-cream-v2.webp");
+  --clay-cream-button: url("art/clay-santa-button-cream-v2.webp");
   display: grid;
   justify-items: center;
   min-width: 0;
@@ -267,7 +267,7 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   position: absolute;
   inset: 0;
   border: 18px solid transparent;
-  border-image: url("assets/clay-photo-frame-cream.webp") 84 68 80 66 / 18px stretch;
+  border-image: url("art/clay-photo-frame-cream.webp") 84 68 80 66 / 18px stretch;
   pointer-events: none;
 }
 .photo-picker p { font-size: .88rem; font-weight: 650; }
@@ -350,7 +350,7 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
 .primary {
   background: transparent;
   border: 0;
-  border-image: url("assets/clay-photo-button.webp") 0 116 fill / 0 29px stretch;
+  border-image: url("art/clay-photo-button.webp") 0 116 fill / 0 29px stretch;
   color: #fff7e9;
   text-shadow: 0 1px 3px #6e2504;
 }
@@ -386,7 +386,7 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   inset: 0;
   z-index: 2;
   border: 22px solid transparent;
-  border-image: url("assets/clay-photo-frame-cream.webp") 84 68 80 66 / 22px stretch;
+  border-image: url("art/clay-photo-frame-cream.webp") 84 68 80 66 / 22px stretch;
   pointer-events: none;
   filter: drop-shadow(0 8px 10px #3a3c513d);
 }
