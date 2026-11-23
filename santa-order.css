@@ -160,7 +160,7 @@ html[data-photo-loading] {
   font-size: 1.3rem;
   font-weight: 1000;
 }
-#photo-loading-title:focus { outline: none; }
+#photo-loading-title:focus, #preview-title:focus { outline: none; }
 .photo-loading-percent {
   font-variant-numeric: tabular-nums;
 }

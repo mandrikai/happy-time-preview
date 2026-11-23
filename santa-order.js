@@ -17,10 +17,51 @@ function orderUrl(page, selectedMode = mode, selectedProduct, selectedPreview = 
   return `${orderPages[page]}?${query}`;
 }
 
-async function showOrderPreview(canvas) {
-  const content = document.querySelector('[data-preview-content]');
+const previewContent = document.querySelector('[data-preview-content]');
+const previewMarkup = `
+<section class="preview-heading">
+  <h1 id="preview-title" tabindex="-1">Ваше фото<br class="desktop-break"> готово!</h1>
+  <p class="lead">Превью выбранного фото с водяным знаком. Выберите, как хотите получить снимок.</p>
+</section>
+<figure class="preview-figure">
+  <div class="photo-frame" data-protected-photo>
+    <canvas data-preview-canvas role="img" aria-label="Превью фото с водяным знаком Happy Time"></canvas>
+  </div>
+</figure>
+<div class="products">
+  <p class="hint" data-preview-storage-message hidden>Браузер не сохранил превью для оформления. Фото можно посмотреть здесь.</p>
+  <article class="product-card">
+    <div><h2>Печатное фото и PDF</h2><p>Один снимок 10 × 15 см на глянцевой бумаге и чистый PDF</p></div>
+    <strong class="amount">550 ₽</strong>
+    <p class="pickup">Самовывоз · Пушкин, Кузьминское шоссе, 66Д, салон Happy Time</p>
+    <a class="secondary" href="santa-checkout.html?product=print" data-product-link="print">Выбрать печать и PDF</a>
+  </article>
+  <article class="product-card">
+    <div><h2>Цифровое фото</h2><p>PDF без водяного знака</p></div>
+    <strong class="amount">369 ₽</strong>
+    <a class="secondary" href="santa-checkout.html?product=pdf" data-product-link="pdf">Выбрать PDF</a>
+  </article>
+</div>
+`;
+
+async function renderOrderPreview(content, saved, drawPreviewJpeg) {
+  if (!content.querySelector('[data-preview-canvas]')) content.innerHTML = previewMarkup;
+  const canvas = content.querySelector('[data-preview-canvas]');
+  const frame = canvas.closest('[data-protected-photo]');
+  // Assign once per render so going back and creating again does not stack listeners.
+  frame.oncontextmenu = event => event.preventDefault();
+  await drawPreviewJpeg(canvas, saved.jpeg);
+  if (frame.classList.contains('photo-frame')) {
+    frame.style.aspectRatio = Math.max(2 / 3, Math.min(16 / 9, canvas.width / canvas.height));
+  }
+  for (const link of content.querySelectorAll('[data-product-link]')) {
+    link.href = orderUrl('checkout', saved.mode, link.dataset.productLink, saved.id);
+  }
+}
+
+async function restoreOrderPreview() {
   const unavailable = document.querySelector('[data-preview-unavailable]');
-  unavailable.querySelector('a').href = `santa-upload.html?mode=${mode}`;
+  unavailable.querySelector('a').href = 'santa-upload.html?' + new URLSearchParams({ mode, flow: 'preview' });
   try {
     const saved = previewId && JSON.parse(sessionStorage.getItem(previewStorageKey));
     if (!saved || saved.id !== previewId || saved.mode !== mode ||
@@ -29,24 +70,16 @@ async function showOrderPreview(canvas) {
       return;
     }
     const { drawPreviewJpeg } = await import('./santa-preview-image.js');
-    await drawPreviewJpeg(canvas, saved.jpeg);
-    const frame = canvas.closest('[data-protected-photo]');
-    frame.addEventListener('contextmenu', event => event.preventDefault());
-    if (frame.classList.contains('photo-frame')) {
-      frame.style.aspectRatio = Math.max(2 / 3, Math.min(16 / 9, canvas.width / canvas.height));
-    }
-    content.hidden = false;
+    await renderOrderPreview(previewContent, saved, drawPreviewJpeg);
+    previewContent.hidden = false;
   } catch {
+    unavailable.querySelector('h1').textContent = 'Не удалось открыть превью';
     unavailable.hidden = false;
   }
 }
 
-const previewCanvas = document.querySelector('[data-preview-canvas]');
-if (previewCanvas) showOrderPreview(previewCanvas);
+if (document.querySelector('[data-preview-unavailable]')) restoreOrderPreview();
 
-document.querySelectorAll('[data-product-link]').forEach(link => {
-  link.href = orderUrl('checkout', mode, link.dataset.productLink);
-});
 document.querySelectorAll('[data-preview-link]').forEach(link => {
   link.href = orderUrl('preview');
 });
@@ -73,6 +106,8 @@ if (photoForm) {
   const photoTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
   let fileUrl;
   let previewTimer;
+  let shownPreview;
+  const uploadTitle = document.title;
   photoForm.elements.mode.value = mode;
 
   function setProgress(value) {
@@ -81,11 +116,34 @@ if (photoForm) {
     progressPercent.textContent = `${value}%`;
   }
 
-  function setPhotoLoading(active) {
-    document.documentElement.toggleAttribute('data-photo-loading', active);
-    uploadLayout.hidden = active;
-    loading.hidden = !active;
-    if (themeColor) themeColor.content = active ? '#beddf3' : uploadThemeColor;
+  function showPhotoScreen(screen) {
+    const loadingActive = screen === 'loading';
+    document.documentElement.toggleAttribute('data-photo-loading', loadingActive);
+    uploadLayout.hidden = screen !== 'upload';
+    loading.hidden = !loadingActive;
+    previewContent.hidden = screen !== 'preview';
+    document.title = screen === 'preview' ? 'Ваше фото готово · Happy Time' : uploadTitle;
+    if (themeColor) themeColor.content = loadingActive ? '#beddf3' : uploadThemeColor;
+  }
+
+  function showCreatedPreview() {
+    showPhotoScreen('preview');
+    window.scrollTo(0, 0);
+    previewContent.querySelector('#preview-title').focus({ preventScroll: true });
+  }
+
+  window.addEventListener('popstate', () => {
+    const currentPreview = new URLSearchParams(location.search).get('preview');
+    if (shownPreview && currentPreview === shownPreview) showCreatedPreview();
+    else {
+      stopPhotoLoading();
+      showPhotoScreen('upload');
+    }
+  });
+
+  function stopPhotoLoading() {
+    window.clearInterval(previewTimer);
+    previewTimer = undefined;
   }
 
   function setPhotoSelected(selected) {
@@ -126,14 +184,14 @@ if (photoForm) {
   photoForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (previewTimer !== undefined) return;
-    if (!fileUrl) {
+    const photo = fileInput.files[0];
+    if (!photo) {
       note.textContent = 'Выберите фото.';
       fileInput.focus();
       return;
     }
     const selectedMode = photoForm.elements.mode.value;
-    const photo = fileInput.files[0];
-    setPhotoLoading(true);
+    showPhotoScreen('loading');
     loadingTitle.focus({ preventScroll: true });
     window.scrollTo(0, 0);
     const startedAt = performance.now();
@@ -143,31 +201,44 @@ if (photoForm) {
     }, 100);
     previewTimer = timer;
     try {
-      const { createWatermarkedJpeg } = await import('./santa-preview-image.js');
+      const { createWatermarkedJpeg, drawPreviewJpeg } = await import('./santa-preview-image.js');
       const jpeg = await createWatermarkedJpeg(photo);
+      const id = crypto.randomUUID();
+      const saved = { id, mode: selectedMode, jpeg };
       const remaining = demoLoadingDuration - (performance.now() - startedAt);
       if (remaining > 0) await new Promise(resolve => window.setTimeout(resolve, remaining));
       if (previewTimer !== timer) return;
-      const id = crypto.randomUUID();
-      sessionStorage.setItem(previewStorageKey, JSON.stringify({ id, mode: selectedMode, jpeg }));
-      window.clearInterval(timer);
+      await renderOrderPreview(previewContent, saved, drawPreviewJpeg);
+      if (previewTimer !== timer) return;
+
+      // Rendering uses this submission directly. Storage is for checkout and refresh.
+      let stored = false;
+      try {
+        sessionStorage.setItem(previewStorageKey, JSON.stringify(saved));
+        stored = true;
+      } catch {}
+      previewContent.querySelector('[data-preview-storage-message]').hidden = stored;
+      for (const card of previewContent.querySelectorAll('.product-card')) card.hidden = !stored;
+      stopPhotoLoading();
       setProgress(100);
-      location.href = orderUrl('preview', selectedMode, undefined, id);
+      shownPreview = id;
+      if (stored) {
+        try { history.pushState(null, '', orderUrl('preview', selectedMode, undefined, id)); } catch {}
+      }
+      showCreatedPreview();
     } catch {
       if (previewTimer !== timer) return;
-      window.clearInterval(timer);
-      previewTimer = undefined;
+      stopPhotoLoading();
       setProgress(0);
-      setPhotoLoading(false);
+      showPhotoScreen('upload');
       note.textContent = 'Не удалось создать превью. Попробуйте выбрать фото в JPG, PNG или WebP.';
       fileInput.focus();
     }
   });
   window.addEventListener('pageshow', event => {
     if (!event.persisted || previewTimer === undefined) return;
-    window.clearInterval(previewTimer);
-    previewTimer = undefined;
-    setPhotoLoading(false);
+    stopPhotoLoading();
+    showPhotoScreen('upload');
     setProgress(0);
   });
 }
