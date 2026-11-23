@@ -35,6 +35,8 @@ if (photoForm) {
   const progressBar = document.getElementById('photo-progress');
   const progressPercent = document.getElementById('photo-progress-percent');
   const fileInput = document.getElementById('photo-file');
+  const photoPicker = fileInput.closest('.photo-picker');
+  const photoAction = document.getElementById('photo-picker-action');
   const image = document.getElementById('picked-photo');
   const note = document.getElementById('file-note');
   const themeColor = document.querySelector('meta[name="theme-color"]');
@@ -59,6 +61,11 @@ if (photoForm) {
     if (themeColor) themeColor.content = active ? '#beddf3' : uploadThemeColor;
   }
 
+  function setPhotoSelected(selected) {
+    photoPicker.toggleAttribute('data-photo-selected', selected);
+    photoAction.textContent = selected ? 'Изменить' : 'Выбрать фото';
+  }
+
   fileInput.addEventListener('change', () => {
     const photo = fileInput.files[0];
     if (fileUrl) URL.revokeObjectURL(fileUrl);
@@ -67,12 +74,14 @@ if (photoForm) {
     if (!photo || !photo.size || photo.size > 7_000_000 || (!photoTypes.has(photo.type) && !heic(photo))) {
       image.removeAttribute('src');
       fileInput.value = '';
+      setPhotoSelected(false);
       note.textContent = photo ? 'Выберите JPG, PNG, WebP или HEIC размером до 7 МБ.' : '';
       return;
     }
     fileUrl = URL.createObjectURL(photo);
     image.src = fileUrl;
-    note.textContent = 'Файл выбран.';
+    setPhotoSelected(true);
+    note.textContent = '';
   });
   image.addEventListener('load', () => {
     image.hidden = false;
@@ -84,6 +93,7 @@ if (photoForm) {
     if (fileUrl) URL.revokeObjectURL(fileUrl);
     fileUrl = undefined;
     fileInput.value = '';
+    setPhotoSelected(false);
     note.textContent = 'Файл не открылся. Выберите другое фото.';
   });
   photoForm.addEventListener('submit', event => {

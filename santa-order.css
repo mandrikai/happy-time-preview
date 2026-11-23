@@ -314,11 +314,18 @@ html[data-photo-loading] {
   font-weight: 800;
 }
 .file-button {
-  padding: 0 18px;
-  border: 1px solid #ad7b8d;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 22px;
   border-radius: 999px;
-  background: transparent;
+  background: #eadbc0 var(--clay-cream-button) center / 100% 100% no-repeat;
   font-size: 1rem;
+}
+.photo-picker[data-photo-selected] .file-button {
+  min-height: 44px;
+  padding-inline: 17px;
+  background: #e9dfd4;
+  font-size: .9rem;
 }
 .text-button { color: var(--berry); background: transparent; border: none; text-decoration: underline; text-underline-offset: .2em; padding: 0 2px; }
 .agreement { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 9px; align-items: start; margin: 17px 0 18px; font-size: .86rem; }
@@ -388,7 +395,9 @@ html[data-photo-loading] {
 .upload-panel .primary:active { transform: translateY(2px) scale(.98); }
 .secondary { border: 1px solid #ab7d8c; color: var(--berry); background: var(--paper); }
 .secondary:hover { background: #f1e3dd; }
-.file-button:hover { background: #f0e1de; }
+@media (hover: hover) {
+  .file-button:hover { filter: brightness(.96); }
+}
 .back-link { display: inline-block; font-weight: 800; font-size: .91rem; }
 .preview-layout {
   max-width: 850px;

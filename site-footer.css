@@ -30,7 +30,8 @@
 }
 
 .ht-footer__identity {
-  align-items: start;
+  align-items: baseline;
+  row-gap: 2px;
 }
 
 .ht-footer a {
@@ -38,13 +39,9 @@
   text-decoration: none;
 }
 
-.ht-footer__contact {
-  display: grid;
-  justify-items: start;
-  gap: 2px;
-}
-
 .ht-footer .ht-footer__brand {
+  grid-column: 1 / -1;
+  justify-self: start;
   display: flex;
   align-items: center;
   gap: .2em;
@@ -62,20 +59,17 @@
 .ht-footer__brand span:last-child { transform: rotate(1.6deg) translateY(.025em); }
 
 .ht-footer__phone {
-  display: inline-flex;
-  align-items: center;
+  justify-self: start;
   min-height: 36px;
+  padding-block: 8px;
   white-space: nowrap;
   font-weight: 800;
 }
 
 .ht-footer__company {
-  padding-top: 4px;
-  font-size: 14px;
+  margin: 0;
+  font-size: clamp(11.5px, calc(3.125vw + 1.5px), 14px);
 }
-
-.ht-footer__company p { margin: 0; }
-.ht-footer__company p + p { margin-top: 6px; }
 
 .ht-footer__links {
   grid-template-rows: repeat(3, auto);
