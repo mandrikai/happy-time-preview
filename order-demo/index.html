@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f4eee3">
+  <link rel="icon" href="assets/clay-ded-moroz.webp">
+  <link rel="stylesheet" href="order.css?v=soft-snow">
+  <script src="order.js?v=soft-snow" defer></script>
+  <title>Фото с Дедом Морозом · Happy Time</title>
+</head>
+<body class="upload-page">
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html"><span class="clay-wordmark clay-lettering"><span>Happy</span> <span>Time</span></span></a>
+      <span class="demo-tag">Демо заказа</span>
+    </div>
+  </header>
+  <main class="snow" id="main" data-page="index">
+    <div class="shell">
+      <div class="upload-layout">
+        <section class="upload-intro">
+          <h1 class="clay-lettering"><span><b>Ф</b>ото</span> с <span><b>Д</b>едом</span> <span>Мор<b>о</b>зом</span></h1>
+          <p class="lead">Посмотрите готовый снимок бесплатно. Если понравится, скачайте PDF или закажите печать.</p>
+          <p class="price-note"><strong>PDF 369 ₽</strong><span></span><strong>Печать + PDF 550 ₽</strong></p>
+        </section>
+        <form class="upload-panel" id="photo-form" aria-labelledby="upload-title">
+          <h2 id="upload-title" class="clay-lettering"><span><b>В</b>ыберите</span> <span>ф<b>о</b>то</span></h2>
+          <fieldset class="picker" aria-label="Тип фотографии">
+            <div class="segments">
+              <label><input type="radio" name="mode" value="sleeping" checked><span>Ребёнок спит</span><small class="mode-badge">Рекомендуем</small></label>
+              <label><input type="radio" name="mode" value="ordinary"><span>Обычное фото</span></label>
+            </div>
+          </fieldset>
+          <div class="photo-picker">
+            <img id="picked-photo" alt="Выбранное фото" hidden>
+            <img class="picker-art" src="assets/clay-ded-moroz.webp" alt="" width="1024" height="820">
+            <label class="file-button" for="photo-file">Выбрать файл</label>
+            <input id="photo-file" type="file" accept="image/*" class="visually-hidden" aria-describedby="file-note">
+            <p id="file-note" role="status"></p>
+          </div>
+          <div class="agreement">
+            <input id="child-consent" type="checkbox" required>
+            <label for="child-consent">Как законный представитель даю согласие на обработку фото ребёнка для создания превью и выдачи выбранного PDF.</label>
+            <div class="form-links">
+              <a href="consent.html" target="_blank" rel="noopener">Текст согласия</a>
+              <a href="privacy.html" target="_blank" rel="noopener">Политика данных</a>
+            </div>
+          </div>
+          <button class="primary" type="submit"><span class="clay-lettering"><span>С<b>о</b>здать</span></span></button>
+        </form>
+      </div>
+      <section class="photo-loading" id="photo-loading" aria-labelledby="photo-loading-title" hidden>
+        <div class="photo-loading-meter">
+          <div class="photo-loading-track" id="photo-progress" role="progressbar" aria-labelledby="photo-loading-title" aria-valuenow="0">
+            <span class="photo-loading-channel"><span class="photo-loading-fill"></span></span>
+            <span class="photo-loading-marker" aria-hidden="true">
+              <img src="assets/clay-loading-star.png" width="160" height="160" alt="">
+            </span>
+          </div>
+          <div class="photo-loading-label">
+            <h2 id="photo-loading-title" class="clay-lettering" tabindex="-1"><span><b>З</b>агрузка…</span></h2>
+            <span class="photo-loading-percent" id="photo-progress-percent" aria-hidden="true">0%</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div>
+        <a class="brand" href="index.html"><span class="clay-wordmark clay-lettering"><span>Happy</span> <span>Time</span></span></a>
+        <p>ООО «Счастливое время»</p>
+        <a href="tel:+79217700271">+7 (921) 770-02-71</a>
+      </div>
+      <nav aria-label="Документы и контакты"><a href="tariffs.html">Тарифы</a><a href="offer.html">Публичная оферта</a><a href="refunds.html">Возвраты</a><a href="privacy.html">Политика обработки персональных данных</a><a href="consent.html">Согласие на обработку фото</a><a href="contacts.html">Контакты и реквизиты</a></nav>
+    </div>
+  </footer>
+</body>
+</html>
