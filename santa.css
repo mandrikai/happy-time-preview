@@ -21,15 +21,6 @@ html.santa-snow-background {
 }
 .clay-santa .site-header { max-width: 1120px; }
 .clay-santa .site-brand { text-decoration: none; }
-.santa-nav {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 44px;
-  color: var(--clay-ink);
-  font-weight: 800;
-  text-decoration: none;
-}
 .santa-heading { margin-bottom: clamp(22px, 4vw, 40px); }
 .santa-panel > header.santa-heading { text-align: center; }
 .santa-title {
@@ -256,5 +247,4 @@ html.santa-snow-background {
 }
 @media (max-width: 370px) {
   .clay-santa .clay-wordmark { font-size: 1.3rem; }
-  .santa-nav { font-size: .88rem; }
 }

@@ -1,0 +1,12 @@
+.site-menu {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #321527;
+  font: 800 17px/1.5 "Nunito", "Arial Rounded MT Bold", system-ui, sans-serif;
+  text-decoration: none;
+}
+
+@media (max-width: 370px) {
+  .site-menu { font-size: 15px; }
+}
