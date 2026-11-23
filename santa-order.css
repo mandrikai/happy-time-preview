@@ -46,7 +46,19 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 850; }
   color: #321527;
   text-shadow: 0 .025em 0 #200d1a22, 0 .045em .04em #381e3128;
 }
-.demo-tag { color: var(--muted); border: 1px solid #d0bfb2; padding: 5px 11px; border-radius: 99px; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+.site-menu {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 14px;
+  border: 1px solid #d0bfb2;
+  border-radius: 99px;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.site-menu:hover { color: var(--berry); }
 .snow {
   --snow-tile-height: max(390px, 42vw);
   --snow-filter: grayscale(1) brightness(.527) contrast(16);
