@@ -408,7 +408,11 @@ html[data-photo-loading] {
   gap: 16px clamp(22px, 6vw, 75px);
 }
 .preview-heading { grid-area: heading; text-align: center; }
-.preview-heading h1 { text-shadow: 0 .025em 0 #4a0f2233, 0 .05em .05em #4a0f2224; }
+.preview-heading h1 {
+  font-size: clamp(2.05rem, 5vw, 3.1rem);
+  font-weight: 1000;
+  text-shadow: 0 .025em 0 #4a0f2233, 0 .05em .05em #4a0f2224;
+}
 .preview-figure { grid-area: photo; width: min(100%, 342px); margin: 0 auto; }
 .photo-frame { position: relative; isolation: isolate; aspect-ratio: 2 / 3; }
 .photo-frame::after {
