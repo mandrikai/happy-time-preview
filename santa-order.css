@@ -403,12 +403,13 @@ html[data-photo-loading] {
   max-width: 850px;
   margin: 16px auto 0;
   display: grid;
-  grid-template: "photo heading" auto "photo buy" 1fr / minmax(240px, .86fr) minmax(0, 1fr);
+  grid-template: "heading buy" auto "photo buy" 1fr / minmax(240px, .86fr) minmax(0, 1fr);
   align-items: start;
   gap: 16px clamp(22px, 6vw, 75px);
 }
-.preview-heading { grid-area: heading; }
-.preview-figure { grid-area: photo; align-self: center; width: min(100%, 342px); margin: 0 auto; }
+.preview-heading { grid-area: heading; text-align: center; }
+.preview-heading h1 { text-shadow: 0 .025em 0 #4a0f2233, 0 .05em .05em #4a0f2224; }
+.preview-figure { grid-area: photo; width: min(100%, 342px); margin: 0 auto; }
 .photo-frame { position: relative; isolation: isolate; aspect-ratio: 2 / 3; }
 .photo-frame::after {
   content: "";
@@ -434,9 +435,11 @@ html[data-photo-loading] {
   user-select: none;
 }
 [data-protected-photo] canvas { display: block; pointer-events: none; }
-.products { grid-area: buy; display: grid; gap: 12px; margin-top: 0; }
+.products { grid-area: buy; align-self: center; display: grid; gap: 12px; margin-top: 0; }
 .product-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 10px 12px; padding: 18px; border-radius: 19px; }
 .product-card p, .order-item p { color: var(--muted); font-size: .87rem; margin-top: 4px; }
+.product-price { display: grid; justify-items: end; gap: 2px; white-space: nowrap; }
+.previous-amount { color: var(--muted); font-size: .88rem; font-weight: 750; line-height: 1.2; }
 .amount { color: var(--berry); font: 950 1.34rem/1.2 var(--display); white-space: nowrap; }
 .product-card > a, .product-card > .pickup { grid-column: 1 / -1; }
 .pickup { padding-top: 7px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
@@ -505,7 +508,6 @@ html[data-photo-loading] {
   .upload-layout, .checkout-layout { grid-template-columns: 1fr; gap: 16px; }
   .upload-intro, .desktop-break { display: none; }
   .preview-layout { grid-template: "heading" auto "photo" auto "buy" auto / minmax(0, 1fr); gap: 14px; margin-top: 9px; }
-  .preview-heading { text-align: center; }
   .preview-figure { width: min(68%, 275px); }
   .photo-frame::after { border-image-width: 18px; }
   .photo-frame > canvas { inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); }

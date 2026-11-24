@@ -2,6 +2,11 @@ const params = new URLSearchParams(location.search);
 const mode = params.get('mode') === 'ordinary' ? 'ordinary' : 'sleeping';
 const product = params.get('product') === 'print' ? 'print' : 'pdf';
 const isPrint = product === 'print';
+const photoPrices = {
+  print: { current: 539, previous: 990 },
+  pdf: { current: 389, previous: 770 },
+};
+const formatPrice = amount => `${amount} ₽`;
 const previewId = params.get('preview');
 const previewStorageKey = 'happy-time-order-preview';
 const orderPages = {
@@ -17,11 +22,18 @@ function orderUrl(page, selectedMode = mode, selectedProduct, selectedPreview = 
   return `${orderPages[page]}?${query}`;
 }
 
+function productPriceMarkup({ current, previous }) {
+  return `
+    <div class="product-price">
+      <s class="previous-amount"><span class="visually-hidden">Прежняя цена </span>${formatPrice(previous)}</s>
+      <strong class="amount">${formatPrice(current)}</strong>
+    </div>`;
+}
+
 let previewContent = document.querySelector('[data-preview-content]');
 const previewMarkup = `
 <section class="preview-heading">
-  <h1 id="preview-title" tabindex="-1">Ваше фото<br class="desktop-break"> готово!</h1>
-  <p class="lead">Превью выбранного фото с водяным знаком. Выберите, как хотите получить снимок.</p>
+  <h1 id="preview-title" class="clay-lettering" tabindex="-1"><span><b>В</b>аше</span> <span>ф<b>о</b>то</span><br class="desktop-break"> <span>гот<b>о</b>во!</span></h1>
 </section>
 <figure class="preview-figure">
   <div class="photo-frame" data-protected-photo>
@@ -32,13 +44,13 @@ const previewMarkup = `
   <p class="hint" data-preview-storage-message hidden>Браузер не сохранил превью для оформления. Фото можно посмотреть здесь.</p>
   <article class="product-card">
     <div><h2>Печатное фото и PDF</h2><p>Один снимок 10 × 15 см на глянцевой бумаге и чистый PDF</p></div>
-    <strong class="amount">550 ₽</strong>
+    ${productPriceMarkup(photoPrices.print)}
     <p class="pickup">Самовывоз · Пушкин, Кузьминское шоссе, 66Д, салон Happy Time</p>
     <a class="secondary" href="santa-checkout.html?product=print" data-product-link="print">Выбрать печать и PDF</a>
   </article>
   <article class="product-card">
     <div><h2>Цифровое фото</h2><p>PDF без водяного знака</p></div>
-    <strong class="amount">369 ₽</strong>
+    ${productPriceMarkup(photoPrices.pdf)}
     <a class="secondary" href="santa-checkout.html?product=pdf" data-product-link="pdf">Выбрать PDF</a>
   </article>
 </div>
@@ -253,7 +265,7 @@ if (photoForm) {
 const payForm = document.getElementById('pay-form');
 if (payForm) {
   const email = document.getElementById('receipt-email');
-  const price = isPrint ? '550 ₽' : '369 ₽';
+  const price = formatPrice(photoPrices[product].current);
   if (isPrint) {
     document.querySelector('[data-product-name]').textContent = 'Печатное фото и PDF';
     document.querySelector('[data-product-desc]').textContent = 'Один отпечаток 10 × 15 см на глянцевой бумаге и чистый PDF';
