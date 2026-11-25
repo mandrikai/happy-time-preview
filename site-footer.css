@@ -97,4 +97,5 @@
 
 @media (max-width: 360px) {
   .ht-footer__inner { --footer-brand-size: 23px; }
+  .ht-footer__links { font-size: 13px; }
 }

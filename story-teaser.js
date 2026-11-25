@@ -16,16 +16,29 @@ document.addEventListener('visibilitychange', updateStoryFlight);
 
 const reduceStoryMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
-// Start once on older Safari. Observe the fixed section, so the animation
-// cannot change the threshold that starts it.
 if (!CSS.supports('(animation-timeline: view()) and (animation-range: entry 0% entry 38%)')) {
+  let storyEntry;
+  let entryInset;
   storiesSection.dataset.storyEnter = 'waiting';
-  const storyEntry = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) return;
-    storiesSection.dataset.storyEnter = 'playing';
-    storyEntry.disconnect();
-  }, { rootMargin: '0px 0px -120px 0px' });
-  storyEntry.observe(storiesSection);
+
+  function observeStoryEntry() {
+    // Match the scroll timeline using pixels because observer margin percentages use width.
+    const inset = Math.round(innerHeight * .38);
+    if (inset === entryInset) return;
+    entryInset = inset;
+    storyEntry?.disconnect();
+    storyEntry = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        storiesSection.dataset.storyEnter = 'playing';
+      } else if (entry.rootBounds && entry.boundingClientRect.top >= entry.rootBounds.bottom) {
+        storiesSection.dataset.storyEnter = 'waiting';
+      }
+    }, { rootMargin: `0px 0px -${inset}px 0px` });
+    storyEntry.observe(storiesSection);
+  }
+
+  observeStoryEntry();
+  window.addEventListener('resize', observeStoryEntry);
 }
 
 let storyScroll;

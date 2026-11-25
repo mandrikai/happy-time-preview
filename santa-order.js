@@ -43,7 +43,7 @@ const previewMarkup = `
 <div class="products">
   <p class="hint" data-preview-storage-message hidden>Браузер не сохранил превью для оформления. Фото можно посмотреть здесь.</p>
   <article class="product-card">
-    <div><h2>Печатное фото и PDF</h2><p>Один снимок 10 × 15 см на глянцевой бумаге и чистый PDF</p></div>
+    <div><h2>Печатное фото и&nbsp;PDF</h2><p>Один снимок 10 × 15 см на глянцевой бумаге и чистый PDF</p></div>
     ${productPriceMarkup(photoPrices.print)}
     <p class="pickup">Самовывоз · Пушкин, Кузьминское шоссе, 66Д, салон Happy Time</p>
     <a class="secondary" href="santa-checkout.html?product=print" data-product-link="print">Выбрать печать и PDF</a>
